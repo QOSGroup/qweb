@@ -1,9 +1,9 @@
 # qos-js-sdk
 
-[![version](https://img.shields.io/github/tag/QOSGroup/explorer.svg)](https://github.com/QOSGroup/explorer/releases/latest)
-[![Build Status](https://travis-ci.org/QOSGroup/explorer.svg?branch=master)](https://travis-ci.org/QOSGroup/explorer)
-[![license](https://img.shields.io/github/license/QOSGroup/explorer.svg)](https://github.com/QOSGroup/explorer/blob/master/LICENSE)
-[![](https://tokei.rs/b1/github/QOSGroup/explorer?category=lines)](https://github.com/QOSGroup/explorer)
+[![version](https://img.shields.io/github/tag/QOSGroup/qos-js-sdk.svg)](https://github.com/QOSGroup/qos-js-sdk/releases/latest)
+[![Build Status](https://travis-ci.org/QOSGroup/qos-js-sdk.svg?branch=master)](https://travis-ci.org/QOSGroup/qos-js-sdk)
+[![license](https://img.shields.io/github/license/QOSGroup/qos-js-sdk.svg)](https://github.com/QOSGroup/qos-js-sdk/blob/master/LICENSE)
+[![](https://tokei.rs/b1/github/QOSGroup/qos-js-sdk?category=lines)](https://github.com/QOSGroup/qos-js-sdk)
 
 QOS JS轻客户端
 
