@@ -1,0 +1,11 @@
+sudo: false
+language: node_js
+before_install:
+  - npm install npm -g
+node_js:
+  - "lts/*"
+  - "9"
+  - "10"
+env:
+  - TEST_SUITE=test
+script: npm run-script $TEST_SUITE

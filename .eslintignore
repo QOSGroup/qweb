@@ -1,0 +1,5 @@
+dist/*.js
+config/*.js
+src/lib/
+
+!**/*.js
