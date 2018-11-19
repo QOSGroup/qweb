@@ -1,7 +1,7 @@
 {
-  "name": "qos-jssdk",
-  "version": "1.0.0",
-  "description": "qos-jsSdk：可用于H5调用QOS钱包内置API",
+  "name": "qos-js-sdk",
+  "version": "0.0.1",
+  "description": "qos-js-Sdk：js轻客户端",
   "main": "index.js",
   "scripts": {
     "dev": "webpack -w",
