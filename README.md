@@ -8,12 +8,12 @@
 QOS JS轻客户端
 
 # Bash
+- 安装依赖 `npm install`
+- 运行测试页面 
+    - 运行 `npm run dev` 
+    - 然后在浏览器中打开 `http://127.0.0.1:9393`
+    - 在 console中查看测试结果
 ```
-    npm install  
-    npm run dev
-
-    请本地 server index.html 
-    在 console中查看测试结果
     后续优化
 ```
 
