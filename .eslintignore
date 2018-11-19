@@ -1,5 +1,6 @@
 dist/*.js
 config/*.js
 src/lib/
+test/
 
 !**/*.js

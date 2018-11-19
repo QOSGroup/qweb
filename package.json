@@ -4,8 +4,8 @@
   "description": "qos-jsSdk：可用于H5调用QOS钱包内置API",
   "main": "index.js",
   "scripts": {
-    "build": "rollup index.js --file dist/bundle.js --format iife",
-    "lint": "eslint --ext .js src",
+    "dev": "webpack -w",
+    "lint": "eslint --ext .js,.vue src",
     "test": "npm run lint"
   },
   "keywords": [

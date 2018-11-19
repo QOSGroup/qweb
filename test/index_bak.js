@@ -8,7 +8,8 @@ import { default as nacl } from '../src/lib/nacl-fast'
 //     decodeBase64
 // } from 'tweetnacl-util'
 
-const { derivePath, getMasterKeyFromSeed, getPublicKey } = require('ed25519-hd-key')
+const { derivePath } = require('ed25519-hd-key')
+// , getMasterKeyFromSeed, getPublicKey
 // import { derivePath } from 'ed25519-hd-key';
 const bip39 = require('bip39')
 
@@ -18,7 +19,7 @@ console.log(mnemonic)
 const seed = bip39.mnemonicToSeed(mnemonic)
 console.log(seed)
 
-const secret = derivePath("m/44'/148'/0'", mnemonic).key;
+const secret = derivePath("m/44'/148'/0'", mnemonic).key
 console.log('secret', secret)
 const keyPair = nacl.sign.keyPair.fromSeed(secret)
 
@@ -28,7 +29,7 @@ console.log(keyPair)
 // console.log('privateKey', encodeBase64(keyPair.secretKey))
 
 
-const hexSeed = bip39.mnemonicToSeedHex(mnemonic)
+// const hexSeed = bip39.mnemonicToSeedHex(mnemonic)
 
 // const k = getMasterKeyFromSeed(hexSeed);
 // console.log(k)

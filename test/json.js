@@ -1,70 +1,70 @@
 var g = {
-    "type": "qbase/txs/stdtx",
-    "value": {
-        "itx": {
-            "type": "qos/txs/TransferTx", "value": {
-                "senders": [
-                    {
-                        "addr": "address1k0m8ucnqug974maa6g36zw7g2wvfd4sug6uxay",
-                        "qos": "2",
-                        "qscs": "0"
-                    }
-                ],
-                "receivers": [
-                    {
-                        "addr": "address12as5uhdpf2y9zjkurx2l6dz8g98qkgryc4x355",
-                        "qos": "2",
-                        "qscs": "0"
-                    }
-                ]
-            }
-        }, "sigature": [
-            {
-                "pubKey": {
-                    "type": "tendermint/PubKeyEd25519",
-                    "value": "Dsg0yaVqd4ZHezKHFVyHdzurrLaKS5Y0HTtqkZxZ78k="
-                },
-                "signature": "JUTk/5Itlqv7VfjFwvARaEeJiAxfPhT4mCbbMVcF+MzYKkxXuz8f+PYTZeDIQ0W89/uTzBvQpn6Y1J8cyaCeBg==",
-                "nonce": "7"
-            }
-        ], "chainid": "qos-test",
-        "maxgas": "0"
-    }
+	'type': 'qbase/txs/stdtx',
+	'value': {
+		'itx': {
+			'type': 'qos/txs/TransferTx', 'value': {
+				'senders': [
+					{
+						'addr': 'address1k0m8ucnqug974maa6g36zw7g2wvfd4sug6uxay',
+						'qos': '2',
+						'qscs': '0'
+					}
+				],
+				'receivers': [
+					{
+						'addr': 'address12as5uhdpf2y9zjkurx2l6dz8g98qkgryc4x355',
+						'qos': '2',
+						'qscs': '0'
+					}
+				]
+			}
+		}, 'sigature': [
+			{
+				'pubKey': {
+					'type': 'tendermint/PubKeyEd25519',
+					'value': 'Dsg0yaVqd4ZHezKHFVyHdzurrLaKS5Y0HTtqkZxZ78k='
+				},
+				'signature': 'JUTk/5Itlqv7VfjFwvARaEeJiAxfPhT4mCbbMVcF+MzYKkxXuz8f+PYTZeDIQ0W89/uTzBvQpn6Y1J8cyaCeBg==',
+				'nonce': '7'
+			}
+		], 'chainid': 'qos-test',
+		'maxgas': '0'
+	}
 }
 
 
 var t = {
-    "type": "qbase/txs/stdtx",
-    "value": {
-        "itx": {
-            "type": "qos/txs/TransferTx",
-            "value": {
-                "senders": [
-                    {
-                        "addr": "address1k0m8ucnqug974maa6g36zw7g2wvfd4sug6uxay",
-                        "qos": "2",
-                        "qscs": null
-                    }
-                ],
-                "receivers": [
-                    {
-                        "addr": "address12as5uhdpf2y9zjkurx2l6dz8g98qkgryc4x355",
-                        "qos": "2",
-                        "qscs": null
-                    }
-                ]
-            }
-        },
-        "sigature": [{
-            "pubkey": {
-                "type": "tendermint/PubKeyEd25519",
-                "value": "E/LYBhSS6fgUlRC1tn00DRmf8k80yF27vX4N94Dppsw="
-            },
-            "signature": "JUTk/5Itlqv7VfjFwvARaEeJiAxfPhT4mCbbMVcF+MzYKkxXuz8f+PYTZeDIQ0W89/uTzBvQpn6Y1J8cyaCeBg==",
-            "nonce": "7"
-        }],
-        "chainid": "qos-test", "maxgas": "0"
-    }
+	'type': 'qbase/txs/stdtx',
+	'value': {
+		'itx': {
+			'type': 'qos/txs/TransferTx',
+			'value': {
+				'senders': [
+					{
+						'addr': 'address1k0m8ucnqug974maa6g36zw7g2wvfd4sug6uxay',
+						'qos': '2',
+						'qscs': null
+					}
+				],
+				'receivers': [
+					{
+						'addr': 'address12as5uhdpf2y9zjkurx2l6dz8g98qkgryc4x355',
+						'qos': '2',
+						'qscs': null
+					}
+				]
+			}
+		},
+		'sigature': [{
+			'pubkey': {
+				'type': 'tendermint/PubKeyEd25519',
+				'value': 'E/LYBhSS6fgUlRC1tn00DRmf8k80yF27vX4N94Dppsw='
+			},
+			'signature': 'JUTk/5Itlqv7VfjFwvARaEeJiAxfPhT4mCbbMVcF+MzYKkxXuz8f+PYTZeDIQ0W89/uTzBvQpn6Y1J8cyaCeBg==',
+			'nonce': '7'
+		}],
+		'chainid': 'qos-test', 'maxgas': '0'
+	}
 }
 
 // : need to signdata % s 
@@ -94,30 +94,30 @@ var t = {
 
 
 var o = {
-    "type": "shareledger/AuthTx",
-    "value": {
-        "msg": {
-            "type": "shareledger/bank/MsgSend",
-            "value": {
-                "nonce": "10",
-                "from": "1234567",
-                "to": "2345678",
-                "amount": {
-                    "denom": "SHR",
-                    "amount": "10"
-                }
-            }
-        }, "signature": {
-            "pubKey": {
-                "type": "shareledger/PubSecp256k1",
-                "value": "BEKZrPS2oJw28meokkVZtZ+gbF0+Kl38BOg4sBVGxhIwKnzhATQeSI4vVyzZcYMUdZsX4i92C4yyxw2d5WnEwaE="
-            },
-            "signature": {
-                "type": "shareledger/SigSecp256k1",
-                "value": "MEQCIGUSdz4zUrSkmvhIE5mmdDWC57Teksm6oV3YwjRHq9oAAiBiOYOsLSNcqEaxCrSzIQuGKOU8WCULdXSbg5Jn7LA1ag=="
-            },
-            "nonce": "10"
-        }
-    }
+	'type': 'shareledger/AuthTx',
+	'value': {
+		'msg': {
+			'type': 'shareledger/bank/MsgSend',
+			'value': {
+				'nonce': '10',
+				'from': '1234567',
+				'to': '2345678',
+				'amount': {
+					'denom': 'SHR',
+					'amount': '10'
+				}
+			}
+		}, 'signature': {
+			'pubKey': {
+				'type': 'shareledger/PubSecp256k1',
+				'value': 'BEKZrPS2oJw28meokkVZtZ+gbF0+Kl38BOg4sBVGxhIwKnzhATQeSI4vVyzZcYMUdZsX4i92C4yyxw2d5WnEwaE='
+			},
+			'signature': {
+				'type': 'shareledger/SigSecp256k1',
+				'value': 'MEQCIGUSdz4zUrSkmvhIE5mmdDWC57Teksm6oV3YwjRHq9oAAiBiOYOsLSNcqEaxCrSzIQuGKOU8WCULdXSbg5Jn7LA1ag=='
+			},
+			'nonce': '10'
+		}
+	}
 }
 
