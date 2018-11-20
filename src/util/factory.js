@@ -15,8 +15,8 @@ export default {
 		return mnemonic
 	},
 	genarateKeyPair(mnemonic) {
-		const hexSeed = bip39.mnemonicToSeedHex(mnemonic);
-		const secret = derivePath("m/44'/148'/0'", hexSeed).key;
+		const hexSeed = bip39.mnemonicToSeedHex(mnemonic)
+		const secret = derivePath("m/44'/148'/0'", hexSeed).key
 		const keyPair = nacl.sign.keyPair.fromSeed(secret)
 		return keyPair
 	},
