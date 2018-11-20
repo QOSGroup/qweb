@@ -39,16 +39,9 @@ export default {
 	getAddress(publicKey) {
 		const bech32 = require('bech32')
 		const pkAarry = getHash256(publicKey)
-		console.log('pkAarry', pkAarry.slice(0, 20))
-
-		let words = bech32.toWords(Buffer.from('foobar', 'utf8'))
-		console.log('words', words)
-
 		const nw = bech32.toWords((Buffer.from(pkAarry.slice(0, 20))))
-		console.log('bf', nw)
-
 		const addr = bech32.encode('address', nw)
-		console.log('addr', addr)
+		return addr
 	},
 	/**
      * 签名
@@ -81,7 +74,8 @@ export default {
 
 		console.log('publicKey hex', buf2hex(keyPair.publicKey))
 
-		this.getAddress(keyPair.publicKey)
+		const addr = this.getAddress(keyPair.publicKey)
+		console.log('addr', addr)
 
 		const pubKeyEd25519 = new PubKeyEd25519(keyPair.publicKey)
 
