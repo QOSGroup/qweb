@@ -8,7 +8,11 @@ import {
 } from 'tweetnacl-util'
 
 import msg from '../model/txmsg'
-
+const getHash256 = input => {
+	let sha256 = require('js-sha256')
+	let hash2 = sha256.update(input)
+	return hash2.array()
+}
 export default {
 	/**
 	 * 生成助记符
@@ -27,6 +31,24 @@ export default {
 		const secret = derivePath("m/44'/148'/0'", hexSeed).key
 		const keyPair = nacl.sign.keyPair.fromSeed(secret)
 		return keyPair
+	},
+	/**
+	 * 获取链上地址
+	 * @param {Uint8Array} publicKey 公钥
+	 */
+	getAddress(publicKey) {
+		const bech32 = require('bech32')
+		const pkAarry = getHash256(publicKey)
+		console.log('pkAarry', pkAarry.slice(0, 20))
+
+		let words = bech32.toWords(Buffer.from('foobar', 'utf8'))
+		console.log('words', words)
+
+		const nw = bech32.toWords((Buffer.from(pkAarry.slice(0, 20))))
+		console.log('bf', nw)
+
+		const addr = bech32.encode('address', nw)
+		console.log('addr', addr)
 	},
 	/**
      * 签名
@@ -56,6 +78,10 @@ export default {
 		console.log('seed', seed)
 		const keyPair = this.genarateKeyPair(seed)
 		console.log('keyPair', keyPair)
+
+		console.log('publicKey hex', buf2hex(keyPair.publicKey))
+
+		this.getAddress(keyPair.publicKey)
 
 		const pubKeyEd25519 = new PubKeyEd25519(keyPair.publicKey)
 
