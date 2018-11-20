@@ -10,10 +10,18 @@ import {
 import msg from '../model/txmsg'
 
 export default {
+	/**
+	 * 生成助记符
+	 */
 	genarateSeed() {
 		const mnemonic = bip39.generateMnemonic()
 		return mnemonic
 	},
+	/**
+	 * 生成公私钥对
+	 * @param {string} mnemonic 助记符
+	 * @returns {object} 公私钥对
+	 */
 	genarateKeyPair(mnemonic) {
 		const hexSeed = bip39.mnemonicToSeedHex(mnemonic)
 		const secret = derivePath("m/44'/148'/0'", hexSeed).key
