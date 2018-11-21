@@ -1,0 +1,32 @@
+'use strict'
+const merge = require('webpack-merge')
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
+const baseWebpackConfig = require('./webpack.base.conf')
+
+const webpackConfig = merge(baseWebpackConfig, {
+    mode: 'production',
+    // cheap-module-eval-source-map is faster for development
+    // devtool: 'source-map',
+    plugins: [
+        new UglifyJsPlugin({
+            uglifyOptions: {
+                compress: {
+                    warnings: false,
+                },
+                warning: 'verbose',
+                ecma: 6,
+                beautify: false,
+                comments: false,
+                mangle: false,
+                toplevel: false,
+                keep_classnames: true,
+                keep_fnames: true
+            },
+            sourceMap: false,
+            parallel: true
+        }),
+        // new BundleAnalyzerPlugin()
+    ],
+})
+
+module.exports = webpackConfig

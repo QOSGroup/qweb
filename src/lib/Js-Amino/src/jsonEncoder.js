@@ -5,6 +5,7 @@ let {
     WireType,
     WireMap
 } = require('./types')
+let { Buffer } = require('safe-buffer')
 
 const encodeJson = (instance, type) => {
 
@@ -23,29 +24,20 @@ const encodeJson = (instance, type) => {
         }
     }
 
-    if (tmpInstance.option && tmpInstance.option.marshalJson) {
-        return tmpInstance.option.marshalJson(tmpInstance)
-    }
-
     switch (type) {
-
+        // fall-through
         case Types.Int8:
-            {
-                return JSON.stringify(tmpInstance)
-            }
-
+        case Types.Int16:
         case Types.Int32:
             {
-                return JSON.stringify(tmpInstance)
+                return tmpInstance
             }
-
         case Types.Int64:
             {
-                return JSON.stringify(tmpInstance * 1)  // convert to string
-            }
-        case Types.Boolean:
-            {
-                return JSON.stringify(tmpInstance)
+                // https://github.com/tendermint/go-amino/blob/v0.14.1/json-encode.go#L99
+                // TODO: In go-amino, (u)int64 is encoded by string, because some languages like JS can't handle (u)int64
+                // So, It seemed that it is necessary to decode (u)int64 to library like bignumber.js?
+                return tmpInstance.toString()
             }
         case Types.String:
             {
@@ -61,9 +53,13 @@ const encodeJson = (instance, type) => {
                 return encodeJsonSlice(tmpInstance)
             }
 
-        case Types.Array:
+        case Types.ArrayStruct:
             {
-                return encodeJsonArray(tmpInstance)
+                return encodeJsonArray(tmpInstance, Types.ArrayStruct)
+            }
+        case Types.ArrayInterface:
+            {
+                return encodeJsonArray(tmpInstance, Types.ArrayInterface)
             }
         case Types.Interface:
             {
@@ -110,14 +106,9 @@ const encodeJsonField = (typeInstance, type) => {
     return value
 }
 
-const encodeJsonArray = (instance) => {
+const encodeJsonArray = (instance, arrayType) => {
     let result = []
-    let withPrefix = false
-    if (instance.option) {
-        if (instance.option.isArrayOfInterface) {
-            withPrefix = true
-        }
-    }
+    let withPrefix = arrayType === Types.ArrayInterface ? true : false
 
     for (let i = 0; i < instance.length; ++i) {
         let item = instance[i]      
@@ -136,18 +127,9 @@ const encodeJsonArray = (instance) => {
 }
 
 const encodeJsonSlice = (tmpInstance) => {
-    if (typeof window === 'undefined') {    // if nodejs
-        return Buffer.from(tmpInstance).toString('base64')
-    }
-    let binary = ''
-    let buffer = new Uint8Array(tmpInstance)
-    for (let i = 0; i < buffer.byteLength; i++) {
-        binary += String.fromCharCode(buffer[i])
-    }
-    return window.btoa(binary)
+    // In go-amino, bytes are encoded by base64 when json-encoding
+    return Buffer.from(tmpInstance).toString('base64')
 }
-
-
 
 module.exports = {
     encodeJson

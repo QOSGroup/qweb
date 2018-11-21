@@ -22,19 +22,17 @@ const encodeInt16 = input => {
 }
 
 const encodeInt32 = input => {
-    /*let buffer = new ArrayBuffer(4); //4 byte
+    let buffer = new ArrayBuffer(4); //4 byte
     let view = new DataView(buffer);
     view.setUint32(0, input); // big endiant
-    return Array.from(new Uint8Array(buffer));*/
-    return encodeSignedVarint(input)
+    return Array.from(new Uint8Array(buffer));
 }
 
 //todo: using TypeArray for compatibility with React and Web
 const encodeInt64 = input => {
-    /*let buff = Buffer(8)
+    let buff = Buffer(8)
     Int53.writeInt64LE(input, buff, 0)
-    return Array.from(new Int32Array(buff))*/
-    return encodeSignedVarint(input)
+    return Array.from(new Int32Array(buff))
 }
 
 const encodeSlice = input => {
@@ -44,13 +42,6 @@ const encodeSlice = input => {
 }
 
 const encodeString = input => {
-    /*let data = input.split('')
-    let encodedData = []
-    data.forEach(element => {
-        encodedData = encodedData.concat(encodeUVarint(element.charCodeAt()))
-    });
-
-    return [input.length].concat(encodedData)*/
     return encodeSlice(Array.from(Buffer.from(input)))
 }
 

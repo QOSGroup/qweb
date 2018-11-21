@@ -49,7 +49,6 @@ let create = (className, properties,type = Types.Struct) => {
         constructor(...args) {
             super()
             let idx = 0;
-            
             properties.forEach(prop => {
                 Reflect.ownKeys(prop).forEach(key => {
 
@@ -65,10 +64,6 @@ let create = (className, properties,type = Types.Struct) => {
                                 AminoType.defaultMap.set(prop['name'], defaultAminotye)
                             }
                         }
-                    } else if (key == 'option') {
-                        if (this[prop['name']]) {
-                            this[prop['name']].option = prop['option']
-                        }    
                     }
                 })
             })

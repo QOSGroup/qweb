@@ -15,10 +15,6 @@ const typeOf = instance => {
  
     return typeof instance;
 }
-function type(o){
-    var s  = Object.prototype.toString.call(o);
-    return s.slice(s.indexOf(" ")+1,s.length-1).toLowerCase();
-}
 
 const ownKeys = instance => {    
     if( !Factory.isExisted(typeOf(instance)) ) return []//throw new TypeError("instance must be amino type") //remember to check it again

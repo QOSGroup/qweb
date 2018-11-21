@@ -94,30 +94,16 @@ var t = {
 
 
 var o = {
-	'type': 'shareledger/AuthTx',
-	'value': {
-		'msg': {
-			'type': 'shareledger/bank/MsgSend',
-			'value': {
-				'nonce': '10',
-				'from': '1234567',
-				'to': '2345678',
-				'amount': {
-					'denom': 'SHR',
-					'amount': '10'
-				}
-			}
-		}, 'signature': {
-			'pubKey': {
-				'type': 'shareledger/PubSecp256k1',
-				'value': 'BEKZrPS2oJw28meokkVZtZ+gbF0+Kl38BOg4sBVGxhIwKnzhATQeSI4vVyzZcYMUdZsX4i92C4yyxw2d5WnEwaE='
-			},
-			'signature': {
-				'type': 'shareledger/SigSecp256k1',
-				'value': 'MEQCIGUSdz4zUrSkmvhIE5mmdDWC57Teksm6oV3YwjRHq9oAAiBiOYOsLSNcqEaxCrSzIQuGKOU8WCULdXSbg5Jn7LA1ag=='
-			},
-			'nonce': '10'
-		}
+	"type": "qbase/account/QOSAccount",
+	"value": {
+		"base_account": {
+			"account_address": "address12as5uhdpf2y9zjkurx2l6dz8g98qkgryc4x355",
+			"public_key": {
+				"type": "tendermint/PubKeyEd25519",
+				"value": "va8Kjc8UCZUD4efbWaW0tRHSE+kxOTei+9rHvQVHvYs="
+			}, "nonce": "0"
+		},
+		"qos": "68",
+		"qscs": null
 	}
 }
-

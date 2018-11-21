@@ -3,6 +3,7 @@ const Reflection = require("./reflect")
 const BinaryEncoder = require("./binaryEncoder")
 const BinaryDecoder = require("./binaryDecoder")
 const JsonEncoder = require("./jsonEncoder")
+const JsonDecoder = require("./jsonDecoder")
 const Encoder = require("./encoder")
 const TypeFactory = require("./typeFactory")
 const Utils = require("./utils")
@@ -17,6 +18,20 @@ let instance = null;
 
 let privObj = {
     typeMap: null
+}
+
+class FieldOtions {
+
+    constructor(opts = {}) {
+        this.jsonName = opts.jsonName || "";
+        this.jsonOmitEmpty = opts.jsonOmitEmpty || "";
+        this.binFixed64 = opts.binFixed64 || false; // (Binary) Encode as fixed64
+        this.binFix32 = opts.binFix32 || false; // (Binary) Encode as fixed32
+        this.unsafe = opts.unsafe || false; // e.g. if this field is a float.
+        this.writeEmpty = opts.writeEmpty || false; // write empty structs and lists (default false except for pointers)
+        this.emptyElements = opts.emptyElements || false; // Slice and Array elements are never nil, decode 0x00 as empty struct.
+
+    }
 }
 
 class Codec {
@@ -39,7 +54,6 @@ class Codec {
 
     registerConcrete(instance, name, opt) {
         let typeName = Reflection.typeOf(instance);
-        console.log(typeName)
         if (this.lookup(typeName)) {
             throw new Error(`${typeName} was registered`)
         }
@@ -54,12 +68,14 @@ class Codec {
         if (!obj) return null;
         let typeInfo = this.lookup(Reflection.typeOf(obj))
         let value = JsonEncoder.encodeJson(obj, obj.type)
+        // if this object was not registered with prefix
         let serializedObj = value
+        // if this object was registered with prefix
         if (typeInfo && typeInfo.name) {
             serializedObj = {
                 type: typeInfo.name,
                 value: value,
-            }    
+            }
         }
         return JSON.stringify(serializedObj)
     }
@@ -70,15 +86,22 @@ class Codec {
         if (!this.lookup(typeName)) {
             throw new Error(`No ${typeName} was registered`)
         }
-        Object.assign(instance, deserializedObj.value)
-
+        let value = deserializedObj
+        let typeInfo = this.lookup(Reflection.typeOf(instance))
+        if (typeInfo && typeInfo.name) {
+            if (deserializedObj.type !== typeInfo.name) {
+                throw new Error(`Type not match. expected: ${typeInfo.name}, but: ${deserializedObj.type}`)
+            }
+            value = deserializedObj.value
+        }
+        JsonDecoder.decodeJson(value, instance)
     }
 
-    marshalBinary(obj) {
+    marshalBinary(obj, fieldOpts = new FieldOtions()) {
         if (!obj) return null
         // let typeInfo = this.lookup(Reflection.typeOf(obj))        
         // if (!typeInfo) return null;
-        let encodedData = BinaryEncoder.encodeBinary(obj, obj.type)
+        let encodedData = BinaryEncoder.encodeBinary(obj, obj.type, fieldOpts)
         if (obj.info) { //if this object was registered with prefix
             if (obj.info.registered) {
                 encodedData = obj.info.prefix.concat(encodedData)
@@ -112,5 +135,6 @@ class Codec {
 }
 
 module.exports = {
-    Codec
+    Codec,
+    FieldOtions
 }
