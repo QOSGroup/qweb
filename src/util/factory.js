@@ -7,7 +7,7 @@ import {
 	decodeBase64
 } from 'tweetnacl-util'
 
-import msg from '../model/txmsg'
+import msg from '../model/AminoType'
 const getHash256 = input => {
 	let sha256 = require('js-sha256')
 	let hash2 = sha256.update(input)
