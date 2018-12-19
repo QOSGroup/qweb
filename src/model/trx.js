@@ -1,47 +1,49 @@
 export default class Trx {
-    trxSender = null
-    trxToAddress = null
-    trxAuthTx = null
-    trxITX = null
-    trxSignature = null
-    
-    get Signature(){
-        return this.trxSignature
-    }
+	constrcutor() {
+		this.trxSender = null
+    this.trxToAddress = null
+    this.trxAuthTx = null
+    this.trxITX = null
+    this.trxSignature = null
+  }
 
-    set Signature(signature){
-        this.trxSignature = signature
-    }
+	get Signature() {
+		return this.trxSignature
+  }
 
-    get sender(){
-        return this.trxSender
-    }
+	set Signature(signature) {
+		this.trxSignature = signature
+  }
 
-    set sender(sender){
-        this.trxSender = sender
-    }
+	get sender() {
+		return this.trxSender
+  }
 
-    get receiver(){
-        return this.trxReceiver;
-    }
+	set sender(sender) {
+		this.trxSender = sender
+  }
 
-    set receiver(receiver){
-        this.trxReceiver = receiver
-    }
+	get receiver() {
+		return this.trxReceiver
+  }
 
-    get ITX() {
-        return this.trxITX
-    }
+	set receiver(receiver) {
+		this.trxReceiver = receiver
+  }
 
-    set ITX(ITX){
-        this.trxITX = ITX
-    }
+	get ITX() {
+		return this.trxITX
+  }
 
-    get authTx(){
-        return this.trxAuthTx
-    }
+	set ITX(ITX) {
+		this.trxITX = ITX
+  }
 
-    set authTx(authTx){
-        this.trxToken = trxAuthTx
-    }
+	get authTx() {
+		return this.trxAuthTx
+  }
+
+	set authTx(authTx) {
+		this.trxToken = trxAuthTx
+  }
 }
