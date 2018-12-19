@@ -1,32 +1,24 @@
-import Trx from './model/trx'
-import DefaultConfig from './config'
+import Trx from './model/trx';
+import DefaultConfig from './config';
 
 export default class QOSWeb {
-    config = null
+	constructor(config) {
+		this.config = config || DefaultConfig
+  }
 
-    constructor(config=DefaultConfig){
-        this.config = config
-    }
+	setConfig(config) {}
 
-    setConfig(config){
+	getBalance(address) {}
 
-    }
+	getTransaction(transactionID) {
+		const trx = new Trx()
+    return trx
+  }
 
-    getBalance(address){
+	createTransaction() {
+		const trx = new Trx()
+    return trx
+  }
 
-    }
-
-    getTransaction(transactionID){
-        const trx = new Trx()
-        return trx
-    }
-
-    createTransaction(){
-        const trx = new Trx()
-        return trx
-    }
-
-    createAccount(){
-
-    }
+	createAccount() {}
 }
