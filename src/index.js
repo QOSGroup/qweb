@@ -1,2 +1,32 @@
+import Trx from './model/trx'
+import DefaultConfig from './config'
 
-import '../test/txmsg'
+export default class QOSWeb {
+    config = null
+
+    constructor(config=DefaultConfig){
+        this.config = config
+    }
+
+    setConfig(config){
+
+    }
+
+    getBalance(address){
+
+    }
+
+    getTransaction(transactionID){
+        const trx = new Trx()
+        return trx
+    }
+
+    createTransaction(){
+        const trx = new Trx()
+        return trx
+    }
+
+    createAccount(){
+
+    }
+}

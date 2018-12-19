@@ -1,7 +1,7 @@
 let {
 	TypeFactory,
 	Types
-} = require('../lib/Js-Amino/src/index')
+} = require('../lib/Js-Amino/src')
 
 export default {
 	AuthTx: TypeFactory.create('AuthTx', [
