@@ -8,7 +8,15 @@
     }],
     "stage-2"
   ],
-  "plugins": ["transform-regenerator"],
+  "plugins": [[
+    "transform-runtime",
+    {
+      "helpers": false,
+      "polyfill": false,
+      "regenerator": true,
+      "moduleName": "babel-runtime"
+    }
+    ]],
   "env": {
     "test": {
       "presets": ["env", "stage-2"],
