@@ -72,7 +72,7 @@ export default {
 		const keyPair = this.genarateKeyPair(seed)
 		console.log('keyPair', keyPair)
 
-		console.log('publicKey hex', buf2hex(keyPair.publicKey))
+		console.log('publicKey hex', this.buf2hex(keyPair.publicKey))
 
 		const addr = this.getAddress(keyPair.publicKey)
 		console.log('addr', addr)
@@ -104,11 +104,18 @@ export default {
 		console.log('pk', pk)
 
 		const sd = nacl.sign.detached(by, pk)
-		console.log(buf2hex(sd.buffer))
+		console.log(this.buf2hex(sd.buffer))
 		console.log(encodeBase64(sd))
+	},
+	/**
+	 * buffer to hex
+	 * @param {*} buffer buffer 数组
+	 */
+	buf2hex(buffer) {
+		return Array.prototype.map.call(new Uint8Array(buffer), x => ('00' + x.toString(16)).slice(-2)).join('')
 	}
 }
 
-function buf2hex(buffer) { // buffer is an ArrayBuffer
-	return Array.prototype.map.call(new Uint8Array(buffer), x => ('00' + x.toString(16)).slice(-2)).join('')
-}
+// function buf2hex(buffer) { // buffer is an ArrayBuffer
+// 	return Array.prototype.map.call(new Uint8Array(buffer), x => ('00' + x.toString(16)).slice(-2)).join('')
+// }

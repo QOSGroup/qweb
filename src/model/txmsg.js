@@ -11,7 +11,7 @@ export default {
 		},
 		{
 			name: 'sigature',
-			type: Types.Array
+			type: Types.ArrayStruct
 		}, {
 			name: 'chainid',
 			type: Types.String
@@ -24,11 +24,11 @@ export default {
 	ITX: TypeFactory.create('ITX', [
 		{
 			name: 'senders',
-			type: Types.Array
+			type: Types.ArrayStruct
 		},
 		{
 			name: 'receivers',
-			type: Types.Array
+			type: Types.ArrayStruct
 		}
 	]),
 	Sender: TypeFactory.create('Sender', [

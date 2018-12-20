@@ -5,6 +5,7 @@ const Types = {
     Int8: Symbol('Int8'),
     String: Symbol('String'),
     Struct: Symbol('Struct'),
+    Time: Symbol('Time'),
     ByteSlice: Symbol('ByteSlice'),
     ArrayStruct: Symbol('ArrayStruct'),
     ArrayInterface: Symbol('ArrayInterface'),
@@ -24,14 +25,13 @@ const WireMap = {
     [Types.Int32]: WireType.Type4Byte,
     [Types.Int16]: WireType.Varint,
     [Types.Int8]: WireType.Varint,
+    [Types.Time]: WireType.Varint,
     [Types.String]: WireType.ByteLength,
     [Types.Struct]: WireType.ByteLength,
     [Types.ByteSlice]: WireType.ByteLength,
     [Types.ArrayStruct]: WireType.ByteLength,
     [Types.ArrayInterface]: WireType.ByteLength,
     [Types.Interface]: WireType.ByteLength,
-   
-
 }
 
 WireType.keysOf = number => {
