@@ -25,10 +25,12 @@
     "babel-preset-env": "^1.3.2",
     "babel-preset-es2015": "^6.24.1",
     "babel-preset-stage-2": "^6.22.0",
+    "chai": "^4.2.0",
     "eslint": "4.19.1",
     "eslint-friendly-formatter": "4.0.1",
     "eslint-loader": "2.0.0",
-    "nanoseconds": "^1.0.1",
+    "karma": "^3.1.4",
+    "mocha": "^5.2.0",
     "webpack": "^4.25.1",
     "webpack-bundle-analyzer": "^3.0.3",
     "webpack-cli": "^3.1.2",
@@ -36,6 +38,7 @@
     "webpack-merge": "^4.1.4"
   },
   "dependencies": {
+    "axios": "^0.18.0",
     "bech32": "^1.1.3",
     "bip39": "^2.5.0",
     "ed25519-hd-key": "^0.5.0",
