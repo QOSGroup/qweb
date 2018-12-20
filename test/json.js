@@ -32,6 +32,43 @@ var g = {
 	}
 }
 
+var t = {
+    "type": "qbase/txs/stdtx",
+    "value": {
+        "itx": {
+            "type": "qos/txs/TransferTx",
+            "value": {
+                "senders": [
+                    {
+                        "addr": "address1k0m8ucnqug974maa6g36zw7g2wvfd4sug6uxay",
+                        "qos": 2,
+                        "qscs": 0
+                    }
+                ],
+                "receivers": [
+                    {
+                        "addr": "address12as5uhdpf2y9zjkurx2l6dz8g98qkgryc4x355",
+                        "qos": 2,
+                        "qscs": 0
+                    }
+                ]
+            }
+        },
+        "sigature": [
+            {
+                "pubKey": {
+                    "type": "tendermint/PubKeyEd25519",
+                    "value": "41jO3Ew9ilSWy019FQ5MiOspGN9/iKYXF9KjkbhH5zY="
+                },
+                "signature": "JUTk/5Itlqv7VfjFwvARaEeJiAxfPhT4mCbbMVcF+MzYKkxXuz8f+PYTZeDIQ0W89/uTzBvQpn6Y1J8cyaCeBg==",
+                "nonce": 10
+            }
+        ],
+        "chainid": "qos-test",
+        "maxgas": 0
+    }
+}
+
 
 var t = {
 	'type': 'qbase/txs/stdtx',
