@@ -7,7 +7,8 @@
     "build": "webpack --config build/webpack.prod.conf.js",
     "dev": "webpack-dev-server --watch-content-base --inline --content-base ./dist --port 9393 --host 127.0.0.1 --open --hot --config build/webpack.dev.conf.js",
     "lint": "eslint --ext .js,.vue src",
-    "test": "npm run lint"
+    "test": "npm run lint",
+    "unittest": "karma start karma.conf.js"
   },
   "keywords": [
     "qos",
@@ -22,6 +23,7 @@
     "babel-loader": "^7.1.5",
     "babel-plugin-istanbul": "^4.1.1",
     "babel-plugin-transform-regenerator": "^6.26.0",
+    "babel-plugin-transform-runtime": "^6.23.0",
     "babel-preset-env": "^1.3.2",
     "babel-preset-es2015": "^6.24.1",
     "babel-preset-stage-2": "^6.22.0",
@@ -30,6 +32,10 @@
     "eslint-friendly-formatter": "4.0.1",
     "eslint-loader": "2.0.0",
     "karma": "^3.1.4",
+    "karma-chai": "^0.1.0",
+    "karma-chrome-launcher": "^2.2.0",
+    "karma-mocha": "^1.3.0",
+    "karma-webpack": "^3.0.5",
     "mocha": "^5.2.0",
     "webpack": "^4.25.1",
     "webpack-bundle-analyzer": "^3.0.3",

@@ -6,7 +6,7 @@ import HTTPEndpoint from './util/HTTPEndpoint'
 export default class QOSWeb {
 	constructor(config = DefaultConfig) {
 		this.config = config
-		this.HTTPEndpoint = new HTTPEndpoint(config)
+		this.HTTPEndpoint = new HTTPEndpoint(this.config)
 	}
 
 	// setConfig(config) {}
