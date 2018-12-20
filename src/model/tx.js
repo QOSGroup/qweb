@@ -8,18 +8,28 @@ const PubKeyEd25519 = trxType.PubKeyEd25519,
 	Receiver = trxType.Receiver,
 	Signature = trxType.Signature
 
-export default class Trx {
-	constrcutor(trx) {
+export default class Tx {
+	/**
+     * Tx
+     * @param {Object} tx  { publicKey: null, privateKey: null, senders: null, receivers: null, chainid: null }
+     * @param {Uint8Array} tx.publicKey - 公钥
+     * @param {Uint8Array} tx.privateKey - 公钥
+     * @param {Array} tx.senders - 发送方
+     * @param {string} tx.senders[].addr - 发送方地址
+     * @param {Array} tx.receivers - 接收方
+     * @param {string} tx.senders[].addr - 接收方地址
+     * 
+     */
+	constrcutor(tx) {
 		this.codec = null
-		this.trx = {
+		this.tx = {
 			publicKey: null,
-			trxSender: null,
-			trxToAddress: null,
-			trxAuthTx: null,
-			trxITX: null,
-			trxSignature: null
+			privateKey: null,
+			senders: null,
+			receivers: null,
+			chainid: null
 		}
-		this.trx = Object.assign(this.trx, trx)
+		this.tx = Object.assign(this.tx, tx)
 	}
 
 	initCodec() {
@@ -32,49 +42,11 @@ export default class Trx {
 		codec.registerConcrete(new Signature, 'Signature', {})
 		this.codec = codec
 	}
+    
+
 
 	create() {
 		// const pubKeyEd25519 = new PubKeyEd25519(this.trx.publicKey)
 		// const sender = new Sender(this.sender, 2, 0)
-	}
-
-	get Signature() {
-		return this.trxSignature
-	}
-
-	set Signature(signature) {
-		this.trx.trxSignature = signature
-	}
-
-	get sender() {
-		return this.trx.trxSender
-	}
-
-	set sender(sender) {
-		this.trx.trxSender = sender
-	}
-
-	get receiver() {
-		return this.trx.trxReceiver
-	}
-
-	set receiver(receiver) {
-		this.trx.trxReceiver = receiver
-	}
-
-	get ITX() {
-		return this.trx.trxITX
-	}
-
-	set ITX(ITX) {
-		this.trx.trxITX = ITX
-	}
-
-	get authTx() {
-		return this.trx.trxAuthTx
-	}
-
-	set authTx(authTx) {
-		this.trx.trxToken = authTx
 	}
 }

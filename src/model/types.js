@@ -1,7 +1,4 @@
-let {
-	TypeFactory,
-	Types
-} = require('../lib/Js-Amino/src')
+let { TypeFactory, Types } = require('../lib/Js-Amino/src')
 
 export default {
 	AuthTx: TypeFactory.create('AuthTx', [
@@ -31,6 +28,12 @@ export default {
 			type: Types.ArrayStruct
 		}
 	]),
+	PubKeyEd25519: TypeFactory.create('PubKeyEd25519', [
+		{
+			name: 'a',
+			type: Types.ByteSlice
+		}], Types.ByteSlice
+	),
 	Sender: TypeFactory.create('Sender', [
 		{
 			name: 'addr',
@@ -59,13 +62,6 @@ export default {
 			type: Types.Int8
 		}
 	]),
-	PubKeyEd25519: TypeFactory.create('PubKeyEd25519', [
-		{
-			name: 'a',
-			type: Types.ByteSlice
-		}],
-	Types.ByteSlice
-	),
 	Signature: TypeFactory.create('Signature', [
 		{
 			name: 'pubKey',

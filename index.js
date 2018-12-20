@@ -1,1 +1,3 @@
-import './src/index'
+// import './src/index'
+
+import './test/txmsg'
