@@ -3,5 +3,6 @@ config/*.js
 src/lib/
 test/
 build/
+tmpfiles/
 
 !**/*.js
