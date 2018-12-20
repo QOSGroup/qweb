@@ -14,7 +14,7 @@ QOS JS轻客户端
     - 然后在浏览器中打开 `http://127.0.0.1:9393`
     - 在 console中查看测试结果
 - 运行单元测试
-    - 运行 `npm run test` 
+    - 运行 `npm run unittest` 
     - 在 console中查看测试结果
 - 生产打包
     - 运行 `npm run build`
