@@ -45,7 +45,7 @@ export default {
 		},
 		{
 			name: 'qscs',
-			type: Types.Int8
+			type: Types.ArrayStruct
 		}
 	]),
 	Receiver: TypeFactory.create('Receiver', [
@@ -59,6 +59,16 @@ export default {
 		},
 		{
 			name: 'qscs',
+			type: Types.ArrayStruct
+		}
+	]),
+	QSC: TypeFactory.create('qsc', [
+		{
+			name: 'coin_name',
+			type: Types.String
+		},
+		{
+			name: 'amount',
 			type: Types.Int8
 		}
 	]),

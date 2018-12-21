@@ -7,14 +7,24 @@ var g = {
 					{
 						'addr': 'address1k0m8ucnqug974maa6g36zw7g2wvfd4sug6uxay',
 						'qos': '2',
-						'qscs': '0'
+						'qscs': [
+							{
+								'coin_name': 'AOE',
+								'amount': '5'
+							}
+						]
 					}
 				],
 				'receivers': [
 					{
 						'addr': 'address12as5uhdpf2y9zjkurx2l6dz8g98qkgryc4x355',
 						'qos': '2',
-						'qscs': '0'
+						'qscs': [
+							{
+								'coin_name': 'AOE',
+								'amount': '5'
+							}
+						]
 					}
 				]
 			}
@@ -33,40 +43,40 @@ var g = {
 }
 
 var t = {
-    "type": "qbase/txs/stdtx",
-    "value": {
-        "itx": {
-            "type": "qos/txs/TransferTx",
-            "value": {
-                "senders": [
-                    {
-                        "addr": "address1k0m8ucnqug974maa6g36zw7g2wvfd4sug6uxay",
-                        "qos": 2,
-                        "qscs": 0
-                    }
-                ],
-                "receivers": [
-                    {
-                        "addr": "address12as5uhdpf2y9zjkurx2l6dz8g98qkgryc4x355",
-                        "qos": 2,
-                        "qscs": 0
-                    }
-                ]
-            }
-        },
-        "sigature": [
-            {
-                "pubKey": {
-                    "type": "tendermint/PubKeyEd25519",
-                    "value": "41jO3Ew9ilSWy019FQ5MiOspGN9/iKYXF9KjkbhH5zY="
-                },
-                "signature": "JUTk/5Itlqv7VfjFwvARaEeJiAxfPhT4mCbbMVcF+MzYKkxXuz8f+PYTZeDIQ0W89/uTzBvQpn6Y1J8cyaCeBg==",
-                "nonce": 10
-            }
-        ],
-        "chainid": "qos-test",
-        "maxgas": 0
-    }
+	"type": "qbase/txs/stdtx",
+	"value": {
+		"itx": {
+			"type": "qos/txs/TransferTx",
+			"value": {
+				"senders": [
+					{
+						"addr": "address1k0m8ucnqug974maa6g36zw7g2wvfd4sug6uxay",
+						"qos": 2,
+						"qscs": 0
+					}
+				],
+				"receivers": [
+					{
+						"addr": "address12as5uhdpf2y9zjkurx2l6dz8g98qkgryc4x355",
+						"qos": 2,
+						"qscs": 0
+					}
+				]
+			}
+		},
+		"sigature": [
+			{
+				"pubKey": {
+					"type": "tendermint/PubKeyEd25519",
+					"value": "41jO3Ew9ilSWy019FQ5MiOspGN9/iKYXF9KjkbhH5zY="
+				},
+				"signature": "JUTk/5Itlqv7VfjFwvARaEeJiAxfPhT4mCbbMVcF+MzYKkxXuz8f+PYTZeDIQ0W89/uTzBvQpn6Y1J8cyaCeBg==",
+				"nonce": 10
+			}
+		],
+		"chainid": "qos-test",
+		"maxgas": 0
+	}
 }
 
 
@@ -108,7 +118,9 @@ var t = {
 
 // b3f67e6260e20beaefbdd223a13bc8539896d61c3257614e5da14a88514adc1995fd3447414e0b206432716f732d7465737400000000000000000000000000000007
 // 16进制字符串
-// from+32+to+32+chianid+none
+// from getHash256(公钥),Buffer.from(publicKey_hash256.slice(0, 20)),取前20位转换成 Hex 字符串即可
+// to 同上（待定）
+// from+32+to+32+chianid+nonce
 // 将上面得到的值 ed25519 签名之后 得到 signature
 
 // from: % s b3f67e6260e20beaefbdd223a13bc8539896d61c

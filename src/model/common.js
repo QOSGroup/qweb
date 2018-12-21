@@ -13,10 +13,17 @@ export default {
 				type: Types.Int8
 			}
 		})
-		const aMsg = [{
-			name: 'addr',
-			type: Types.String
-		}, ...coins]
+		const aMsg = [
+			{
+				name: 'addr',
+				type: Types.String
+			},
+			{
+				name: 'qos',
+				type: Types.Int8
+			},
+			coins
+		]
 
 		return TypeFactory.create(client, aMsg)
 	},
