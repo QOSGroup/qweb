@@ -1,5 +1,5 @@
 let { Codec } = require('../lib/Js-Amino/src/index')
-import trxType from './model/trxType'
+import trxType from './types'
 
 const PubKeyEd25519 = trxType.PubKeyEd25519,
 	ITX = trxType.ITX,
