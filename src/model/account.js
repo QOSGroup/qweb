@@ -1,13 +1,24 @@
+// import HTTPEndpoint from '../util/HTTPEndpoint'
+
 export default class Account {
-	constrcutor() {
-		this.accountAddress = null
+	constructor(addr) {
+		this._account = null
+		this._address = null
 	}
 
-	get Address() {
-		return this.accountAddress
+	getAccount() {
+		// const http = new HTTPEndpoint({
+		// 	HTTPBaseURL: '',
+		// 	chainId: ''
+		// })
+		
 	}
-    
-	set Address(address){
-		this.accountAddress = address
+
+	get address() {
+		return this._address
+	}
+
+	set address(address) {
+		this._address = address
 	}
 }
