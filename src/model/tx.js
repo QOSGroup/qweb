@@ -1,6 +1,8 @@
+const bech32 = require('bech32')
 let { Codec } = require('../lib/Js-Amino/src/index')
 import trxType from './types'
-import { clientType, ClientType } from './enums'
+import { ClientType } from './enums'
+import { default as tool } from '../util/tool'
 
 const PubKeyEd25519 = trxType.PubKeyEd25519,
 	ITX = trxType.ITX,
@@ -52,9 +54,10 @@ export default class Tx {
 		}
      * 
      */
-	constrcutor() {
+	constructor() {
 		this.codec = null
-		this.tx = {
+		
+		this._tx = {
 			publicKey: null,
 			privateKey: null,
 			senders: null,
@@ -63,6 +66,10 @@ export default class Tx {
 			itx: null
 		}
 		// this.tx = Object.assign(this.tx, tx)
+	}
+
+	get tx() {
+		return this._tx
 	}
 
 	initCodec() {
@@ -119,6 +126,7 @@ export default class Tx {
 			]
 	 */
 	from(senders) {
+		console.log(this.tx)
 		this.tx.senders = this.newClients(senders)
 		return this
 	}
@@ -159,8 +167,39 @@ export default class Tx {
 		// 16进制字符串
 		// from+32+to+32+chianid+nonce
 		// 将上面得到的值 ed25519 签名之后 得到 signature
-		
+		if (this.tx.senders.length === 1) {
+			this.oneToMany(privateKey)
+		}
 
+	}
+
+	/**
+	 * 一对多交易
+	 */
+	oneToMany(privateKey) {
+		console.log(privateKey)
+		const from = this.tx.senders[0]
+		let signature_hex_str = this.getAddrOriginHexStr(from.addr)
+		this.tx.receivers.forEach((client) => {
+			signature_hex_str += `32${this.getAddrOriginHexStr(client.addr)}`
+		})
+		console.log(signature_hex_str)
+	}
+
+	/**
+	 * 根据地址获取原始hex串
+	 * @param {string} addr 地址
+	 */
+	getAddrOriginHexStr(addr) {
+		/**快捷获取签名的from Hex或者 to Hex 值 --start*/
+		const addr_decode = bech32.decode(addr)
+		console.log('addr_decode', addr_decode)
+		const fromwords = bech32.fromWords(addr_decode.words)
+		console.log('fromwords', fromwords)
+		const addrHex = tool.buf2hex(fromwords)
+		console.log('addrHex', addrHex)
+		return addrHex
+		/**快捷获取签名的from Hex或者 to Hex 值 --end*/
 	}
 
 	create() {
