@@ -68,4 +68,11 @@ export default {
 	buf2hex(buffer) {
 		return Array.prototype.map.call(new Uint8Array(buffer), x => ('00' + x.toString(16)).slice(-2)).join('')
 	},
+	stringToHex(str){
+		var val=''
+		for(var i = 0; i < str.length; i++){
+			val +=  str.charCodeAt(i).toString(16)
+		}
+		return val
+	}
 }
