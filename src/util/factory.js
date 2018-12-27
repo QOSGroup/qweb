@@ -18,7 +18,8 @@ export default {
 	 * 生成助记符
 	 */
 	genarateSeed() {
-		const mnemonic = bip39.generateMnemonic()
+		// 商 256，生成24个助记单词
+		const mnemonic = bip39.generateMnemonic(256)
 		return mnemonic
 	},
 	/**
