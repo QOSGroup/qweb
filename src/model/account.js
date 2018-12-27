@@ -1,7 +1,7 @@
 // import HTTPEndpoint from '../util/HTTPEndpoint'
 
 export default class Account {
-	constructor(addr) {
+	constructor() {
 		this._account = null
 		this._address = null
 	}
