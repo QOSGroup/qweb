@@ -54,16 +54,17 @@ export default class Tx {
 		}
      * 
      */
-	constructor() {
+	constructor(chainid) {
 		this.codec = null
-		
+
 		this._tx = {
 			publicKey: null,
 			privateKey: null,
 			senders: null,
 			receivers: null,
-			chainid: null,
-			itx: null
+			chainid: chainid,
+			itx: null,
+			signatureArr: []
 		}
 		// this.tx = Object.assign(this.tx, tx)
 	}
@@ -170,6 +171,8 @@ export default class Tx {
 		if (this.tx.senders.length === 1) {
 			this.oneToMany(privateKey)
 		}
+		this.tx.signatureArr.push(tool.stringToHex(this.tx.chainid))
+		console.log(this.tx.signatureArr.join('32'))
 
 	}
 
@@ -179,11 +182,10 @@ export default class Tx {
 	oneToMany(privateKey) {
 		console.log(privateKey)
 		const from = this.tx.senders[0]
-		let signature_hex_str = this.getAddrOriginHexStr(from.addr)
+		this.tx.signatureArr.push(this.getAddrOriginHexStr(from.addr))
 		this.tx.receivers.forEach((client) => {
-			signature_hex_str += `32${this.getAddrOriginHexStr(client.addr)}`
+			this.tx.signatureArr.push(this.getAddrOriginHexStr(client.addr))
 		})
-		console.log(signature_hex_str)
 	}
 
 	/**
