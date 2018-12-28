@@ -1,9 +1,13 @@
 import nacl from 'tweetnacl'
-import { derivePath } from 'ed25519-hd-key'
+import { encodeBase64, decodeBase64 } from 'tweetnacl-util'
+import { default as tool } from '../util/tool'
 import bip39 from 'bip39'
 import HTTPEndpoint from '../util/HTTPEndpoint'
 import Tx from './tx'
 import Account from './account'
+
+const genarateMnemonic = Symbol('genarateMnemonic')
+const genarateKeyPair = Symbol('genarateKeyPair')
 
 export default class QWeb {
 	constructor(config) {
@@ -21,17 +25,55 @@ export default class QWeb {
 	}
 
 	get tx() {
-		return new Tx(this.chainId)
+		return new Tx(this)
 	}
 
 	get account() {
-		return new Account()
+		return new Account(this)
+	}
+
+	get http() {
+		return this._httpEndpoint
+	}
+
+	newAccount() {
+		const mnemonic = this[genarateMnemonic]()
+		const keyPair = this[genarateKeyPair](mnemonic)
+		return {
+			mnemonic,
+			keyPair,
+			publicKey: encodeBase64(keyPair.publicKey),
+			privateKey: encodeBase64(keyPair.secretKey),
+			address: this.getAddress(keyPair.publicKey)
+		}
+	}
+
+	recoveryAccountByMnemonic(mnemonic) {
+		const keyPair = this[genarateKeyPair](mnemonic)
+		return {
+			mnemonic,
+			keyPair,
+			publicKey: encodeBase64(keyPair.publicKey),
+			privateKey: encodeBase64(keyPair.secretKey),
+			address: this.getAddress(keyPair.publicKey)
+		}
+	}
+
+	recoveryAccountByPrivateKey(privateKey) {
+		const privateKey_buffer = decodeBase64(privateKey)
+		const keyPair = nacl.sign.keyPair.fromSecretKey(privateKey_buffer)
+		return {
+			keyPair,
+			publicKey: encodeBase64(keyPair.publicKey),
+			privateKey: encodeBase64(keyPair.secretKey),
+			address: this.getAddress(keyPair.publicKey)
+		}
 	}
 
 	/**
      * 生成助记符
      */
-	genarateSeed() {
+	[genarateMnemonic]() {
 		// 商 256，生成24个助记单词
 		const mnemonic = bip39.generateMnemonic(256)
 		return mnemonic
@@ -42,16 +84,10 @@ export default class QWeb {
 	 * @param {string} mnemonic 助记符
 	 * @returns {object} 公私钥对
 	 */
-	genarateKeyPair(mnemonic) {
-		console.log('mnemonic', mnemonic)
+	[genarateKeyPair](mnemonic) {
 		const hexSeed = bip39.mnemonicToSeed(mnemonic, 'qstars')
-		console.log(hexSeed)
-		console.log(bip39.validateMnemonic(mnemonic))
-        
-		const secret = derivePath("m/44'/148'/0'", hexSeed).key
-		console.log(secret)
-        
-		const keyPair = nacl.sign.keyPair.fromSeed(secret)
+		const secret = tool.getHash256(hexSeed)
+		const keyPair = nacl.sign.keyPair.fromSeed(new Uint8Array(secret))
 		return keyPair
 	}
 
@@ -61,7 +97,7 @@ export default class QWeb {
 	 */
 	getAddress(publicKey) {
 		const bech32 = require('bech32')
-		const pkAarry = this.getHash256(publicKey)
+		const pkAarry = tool.getHash256(publicKey)
 		const nw = bech32.toWords((Buffer.from(pkAarry.slice(0, 20))))
 		const addr = bech32.encode('address', nw)
 		return addr

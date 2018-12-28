@@ -1,24 +1,12 @@
-// import HTTPEndpoint from '../util/HTTPEndpoint'
-
 export default class Account {
-	constructor() {
-		this._account = null
-		this._address = null
+	constructor(qweb) {
+		this._qweb = qweb
 	}
 
-	getAccount() {
-		// const http = new HTTPEndpoint({
-		// 	HTTPBaseURL: '',
-		// 	chainId: ''
-		// })
-		
-	}
-
-	get address() {
-		return this._address
-	}
-
-	set address(address) {
-		this._address = address
+	get(address) {
+		// http://localhost:1317/QOSaccounts/cosmosaccaddr120ws5500u0q8q75k70uetqp2xnysus5t4x9ug9
+		return this._qweb.http.request({
+			url: `/QOSaccounts/${address}`
+		})
 	}
 }

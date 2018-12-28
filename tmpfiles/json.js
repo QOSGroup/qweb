@@ -42,6 +42,53 @@ var g = {
 	}
 }
 
+var test = {
+	"type": "qbase/txs/stdtx",
+	"value": {
+		"itx": {
+			"type": "qos/txs/TxTransfer",
+			"value": {
+				"senders": [{
+					"addr": "address13mjc3n3xxj73dhkju9a0dfr4lrfvv3whxqg0dy", "qos": "0", "qscs": [{ "coin_name": "AOE", "amount": "2" }]
+				}],
+				"receivers": [{
+					"addr": "address13hkg8nva06hntmnhfupy29c2l9aq9zs879jhez", "qos": "0", "qscs": [{ "coin_name": "AOE", "amount": "2" }]
+				}, {
+					"addr": "address13hkg8nva06hntmnhfupy29c2l9aq9zs879jhez", "qos": "0", "qscs": [{ "coin_name": "AOE", "amount": "2" }]
+				}]
+			}
+		}, "sigature": [{
+			"pubkey": { "type": "tendermint/PubKeyEd25519", "value": "fDLjEW4zeLVCvKKx4iYB00fnp5Mcl3APIIla7KyETOE=" },
+			"signature": "noiI1XrPRiw6UWTAuZb8XatNP0B8x8Dw0INvIsxH1PoAo3SbuwDQLX5kF8CCW9f335di87T3ZI5BsirsS9g9AA==",
+			"nonce": "7"
+		}], "chainid": "qos-test", "maxgas": "0"
+	}
+}
+
+
+var mine = {
+	"type": "qbase/txs/stdtx",
+	"value": {
+		"itx": {
+			"type": "qos/txs/TxTransfer",
+			"value": {
+				"senders": [{
+					"addr": "address13mjc3n3xxj73dhkju9a0dfr4lrfvv3whxqg0dy", "qos": "0", "qscs": [{ "coin_name": "AOE", "amount": "2" }]
+				}],
+				"receivers": [{
+					"addr": "address13hkg8nva06hntmnhfupy29c2l9aq9zs879jhez", "qos": "0", "qscs": [{ "coin_name": "AOE", "amount": "2" }]
+				}, {
+					"addr": "address13hkg8nva06hntmnhfupy29c2l9aq9zs879jhez", "qos": "0", "qscs": [{ "coin_name": "AOE", "amount": "2" }]
+				}]
+			}
+		}, "sigature": [{
+			"pubKey": { "type": "tendermint/PubKeyEd25519", "value": "fDLjEW4zeLVCvKKx4iYB00fnp5Mcl3APIIla7KyETOE=" },
+			"signature": "MZZlwJOYgGr4N5+Skzb1SRjEKqtSyf60WsOtsV47L7Fpj3jj87nPS/BhaJYfcjBTxRMPYckYPHUwT8qVmZIlBw==",
+			"nonce": "7"
+		}], "chainid": "qos-test", "maxgas": "0"
+	}
+}
+
 var t = {
 	"type": "qbase/txs/stdtx",
 	"value": {

@@ -1,23 +1,43 @@
 import QWeb from '../src/model/qweb'
 
-import {
-	encodeBase64,
-	// decodeBase64
-} from 'tweetnacl-util'
+// import {
+// 	encodeBase64,
+// 	// decodeBase64
+// } from 'tweetnacl-util'
 
-const qweb = new QWeb({ chainId: 'qos-test', baseUrl: 'http://' })
+const qweb = new QWeb({ chainId: 'qos-test', baseUrl: 'http://192.168.1.223:1317' })
 
-const privateKey = 'rpt3O80wAFI1+ZqNYt8DqJ5PaQ+foDq7G/InFfycoFYT8tgGFJLp+BSVELW2fTQNGZ/yTzTIXbu9fg33gOmmzA=='
+const privateKey = 'Ey+2bNFF2gTUV6skSBgRy3rZwo9nS4Dw0l2WpLrhVvV8MuMRbjN4tUK8orHiJgHTR+enkxyXcA8giVrsrIRM4Q=='
 
 
-qweb.tx.from([{ addr: 'address1k0m8ucnqug974maa6g36zw7g2wvfd4sug6uxay', qos: 10, qscs: { coin_name: 'AOE', amount: 5 } }])
-	.to([{ addr: 'address12as5uhdpf2y9zjkurx2l6dz8g98qkgryc4x355', qos: 10, qscs: { coin_name: 'AOE', amount: 5 } }])
+qweb.tx.from([{ addr: 'address13mjc3n3xxj73dhkju9a0dfr4lrfvv3whxqg0dy', qos: '1', qscs: [{ coin_name: 'AOE', amount: '100' }] }])
+	.to([
+		{ addr: 'address13hkg8nva06hntmnhfupy29c2l9aq9zs879jhez', qos: '1', qscs: [{ coin_name: 'AOE', amount: '100' }] }
+	])
 	.sign(privateKey)
 
 
-const keyPair = qweb.genarateKeyPair('milk garden scare goat sketch laundry teach rival loyal double cotton renew giraffe spend web amused vault snake emerge beauty suffer kitten surface level')
+// const keyPair = qweb.genarateKeyPair()
 
-console.log(keyPair)
-console.log(encodeBase64(keyPair.publicKey))
-console.log(encodeBase64(keyPair.secretKey))
+// console.log(keyPair)
+// console.log(encodeBase64(keyPair.publicKey))
+// console.log(encodeBase64(keyPair.secretKey))
 
+// const newAccount = qweb.newAccount()
+// console.log('--------------------------------------')
+// console.log(newAccount)
+// console.log('--------------------------------------')
+
+// const mn = 'milk garden scare goat sketch laundry teach rival loyal double cotton renew giraffe spend web amused vault snake emerge beauty suffer kitten surface level'
+
+// const recoveryAccount = qweb.recoveryAccountByMnemonic(mn)
+// console.log(recoveryAccount)
+// console.log('--------------------------------------')
+
+// const rAccount = qweb.recoveryAccountByPrivateKey('JcoHX1Oeuvo1coS7nTukw1Km24YbFTccQMpAof/ZEhH2i2uznasYVD/U7oKYN4eL5JT9syYSh+KBmgTffinyNg==')
+// console.log(rAccount)
+// console.log('--------------------------------------')
+
+// qweb.account.get('address1pcjs0t9m9vl7vejwttuc2fzfgnutndnrpyw08m').then(res=>{
+// 	console.log(res)
+// })
