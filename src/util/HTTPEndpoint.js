@@ -8,20 +8,20 @@ const createAxioRequest = (baseURL, timeout)=>{
 }
 
 export default class HTTPEndpoint {
-	cons(config){
+	constructor(config){
 		this.HTTPBaseURL = config.baseUrl
 		this.chainId = config.chainId
-		this.request = createAxioRequest(`${this.HTTPBaseURL}/${this.chainId}`, 30000)
+		this.request = createAxioRequest(`${this.HTTPBaseURL}`, 30000)
 	}
 
 	setHTTPBaseURL(url){
 		this.HTTPBaseURL = url
-		this.request = createAxioRequest(`${this.HTTPBaseURL}/${this.chainId}`, 30000)
+		this.request = createAxioRequest(`${this.HTTPBaseURL}`, 30000)
 	}
 
 	setChainId(chainId){
 		this.chainId = chainId
-		this.request = createAxioRequest(`${this.HTTPBaseURL}/${this.chainId}`, 30000)
+		this.request = createAxioRequest(`${this.HTTPBaseURL}`, 30000)
 	}
 
 	requestGetAccount(address){

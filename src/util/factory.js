@@ -90,6 +90,9 @@ export default {
 
 		const qsc = new QSC('AOE', 5)
 		const sender = new Sender('address1k0m8ucnqug974maa6g36zw7g2wvfd4sug6uxay', 2, [qsc])
+
+		console.log('sender: ',sender)
+
 		const receiver = new Receiver('address12as5uhdpf2y9zjkurx2l6dz8g98qkgryc4x355', 2, [qsc])
 
 		const itx = new ITX([sender], [receiver])

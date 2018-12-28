@@ -1,3 +1,4 @@
+import nacl from 'tweetnacl'
 const bech32 = require('bech32')
 let { Codec } = require('../lib/Js-Amino/src/index')
 import trxType from './types'
@@ -11,6 +12,9 @@ const PubKeyEd25519 = trxType.PubKeyEd25519,
 	Receiver = trxType.Receiver,
 	QSC = trxType.QSC,
 	Signature = trxType.Signature
+
+const getAddrOriginHexStr = Symbol('getAddrOriginHexStr'),
+	getSep = Symbol('getSep')
 
 export default class Tx {
 	/**
@@ -54,19 +58,21 @@ export default class Tx {
 		}
      * 
      */
-	constructor(chainid) {
-		this.codec = null
+	constructor(qweb) {
+		this._codec = null
+		this._qweb = qweb
 
 		this._tx = {
 			publicKey: null,
 			privateKey: null,
 			senders: null,
 			receivers: null,
-			chainid: chainid,
+			chainid: qweb.chainId,
 			itx: null,
 			signatureArr: []
 		}
 		// this.tx = Object.assign(this.tx, tx)
+		this.initCodec()
 	}
 
 	get tx() {
@@ -76,13 +82,13 @@ export default class Tx {
 	initCodec() {
 		const codec = new Codec()
 		codec.registerConcrete(new PubKeyEd25519(), 'tendermint/PubKeyEd25519', {})
-		codec.registerConcrete(new ITX(), 'qos/txs/TransferTx', {})
+		codec.registerConcrete(new ITX(), 'qos/txs/TxTransfer', {})
 		codec.registerConcrete(new AuthTx(), 'qbase/txs/stdtx', {})
 		codec.registerConcrete(new QSC(), 'qsc', {})
 		codec.registerConcrete(new Sender(), 'Sender', {})
 		codec.registerConcrete(new Receiver(), 'Sender', {})
 		codec.registerConcrete(new Signature, 'Signature', {})
-		this.codec = codec
+		this._codec = codec
 	}
 
 	newClients(clients, clientType) {
@@ -163,17 +169,55 @@ export default class Tx {
 		this.tx.itx = new ITX(this.tx.senders, this.tx.receivers)
 	}
 
-	sign(privateKey) {
-		// b3f67e6260e20beaefbdd223a13bc8539896d61c3257614e5da14a88514adc1995fd3447414e0b206432716f732d7465737400000000000000000000000000000007
-		// 16进制字符串
-		// from+32+to+32+chianid+nonce
-		// 将上面得到的值 ed25519 签名之后 得到 signature
+	async sign(privateKey) {
+		// 得到 signature
 		if (this.tx.senders.length === 1) {
 			this.oneToMany(privateKey)
 		}
-		this.tx.signatureArr.push(tool.stringToHex(this.tx.chainid))
-		console.log(this.tx.signatureArr.join('32'))
+		const keyPair = this._qweb.recoveryAccountByPrivateKey(privateKey).keyPair
+		console.log('keyPair',keyPair)
+		console.log(tool.decodeBase64(privateKey))
 
+		const chainId_hex = tool.stringToHex(this.tx.chainid)
+		console.log('chainId_hex', chainId_hex)
+		this.tx.signatureArr.push(chainId_hex)
+
+		console.log(this.tx.signatureArr.join(this[getSep]()))
+		const res = await this._qweb.account.get(this.tx.senders[0].addr)
+		console.log(res)
+
+		//00000000000000000000000000000007716f732d746573740000000000000007
+		// res.data.result.value.base_account.nonce
+		const nonce_str = `00000000000000000000000000000000${7}`
+		const nonce_32_str = nonce_str.slice(-32),
+			nonce_16_str = nonce_str.slice(-16)
+
+		const signature_str = this.tx.signatureArr.join(this[getSep]()) + nonce_32_str + chainId_hex + nonce_16_str
+		console.log(signature_str)
+		const signature_buffer = Buffer.from(signature_str, 'hex')
+		const signatureData = nacl.sign.detached(signature_buffer, keyPair.secretKey)
+		console.log(signatureData)
+		console.log(tool.buf2hex(signatureData.buffer))
+
+		const pubKeyEd25519 = new PubKeyEd25519(keyPair.publicKey)
+		const signature = new Signature(pubKeyEd25519, tool.encodeBase64(signatureData), '7')
+		const authTx = new AuthTx(this.tx.itx, [signature], this.tx.chainid, '0')
+		// 最终生成的输出的JSON
+		const str = this._codec.marshalJson(authTx)
+		console.log('str', str)
+
+		const bufferArr = this._codec.marshalBinary(authTx)
+		console.log('bufferArr', bufferArr)
+	}
+
+	[getSep]() {
+		const from = this.tx.senders[0]
+		const qsc = from.qscs[0]
+		console.log(from)
+		console.log(`${from.qos}${qsc.amount}${qsc.coin_name}`)
+		let sep = tool.stringToHex(`${from.qos}${qsc.amount}${qsc.coin_name}`)
+		console.log('sep', sep)
+		return sep
 	}
 
 	/**
@@ -182,9 +226,9 @@ export default class Tx {
 	oneToMany(privateKey) {
 		console.log(privateKey)
 		const from = this.tx.senders[0]
-		this.tx.signatureArr.push(this.getAddrOriginHexStr(from.addr))
+		this.tx.signatureArr.push(this[getAddrOriginHexStr](from.addr))
 		this.tx.receivers.forEach((client) => {
-			this.tx.signatureArr.push(this.getAddrOriginHexStr(client.addr))
+			this.tx.signatureArr.push(this[getAddrOriginHexStr](client.addr))
 		})
 	}
 
@@ -192,7 +236,7 @@ export default class Tx {
 	 * 根据地址获取原始hex串
 	 * @param {string} addr 地址
 	 */
-	getAddrOriginHexStr(addr) {
+	[getAddrOriginHexStr](addr) {
 		/**快捷获取签名的from Hex或者 to Hex 值 --start*/
 		const addr_decode = bech32.decode(addr)
 		console.log('addr_decode', addr_decode)
