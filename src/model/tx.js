@@ -190,13 +190,15 @@ export default class Tx {
 				keyPair = account.keyPair,
 				pubKeyEd25519 = new PubKeyEd25519(keyPair.publicKey)
 
+			console.log('need.arr:', need.arr)
+
 			const signature_buffer = Buffer.from(need.arr.join(''), 'hex')
 			const signatureData = nacl.sign.detached(signature_buffer, keyPair.secretKey)
 			console.log(signatureData)
 			console.log(tool.buf2hex(signatureData.buffer))
 			console.log(tool.encodeBase64(signatureData))
 
-			const signature = new Signature(pubKeyEd25519, tool.encodeBase64(signatureData), '7')
+			const signature = new Signature(pubKeyEd25519, tool.encodeBase64(signatureData), need.nonce + '')
 			signature_arr.push(signature)
 		})
 
@@ -209,7 +211,9 @@ export default class Tx {
 		console.log('bufferArr', bufferArr)
 
 		const res = await this._qweb.http.request({
-			url: `/QOSaccounts/send` //地址待定
+			url: `/accounts/txSend`, //地址待定
+			method: 'post',
+			data: str
 		})
 
 		return res
@@ -233,15 +237,15 @@ export default class Tx {
 			if (res.data.error) {
 				throw new Error(res.data.error.message)
 			}
-			const nonce = res.data.result.value.base_account.nonce
+			const nonce = Number(res.data.result.value.base_account.nonce) + 1
 			// if (nonce === '0') {
 			// 	nonce = 8
 			// } else {
 			// 	nonce = 7
 			// }
-			const nonce_str = `00000000000000000000000000000000${nonce}`
+			const nonce_str = `00000000000000000000000000000000${nonce.toString(16)}`
 			const nonce_32_str = nonce_str.slice(-32)
-			console.log('nonce:', nonce)
+			console.log('nonce:', nonce.toString(16))
 			needSignData_arr[i].nonce = nonce
 			needSignData_arr[i].arr.push(nonce_32_str)
 			needSignData_arr[i].arr.push(this.chainId_hex)
