@@ -14,7 +14,9 @@ const PubKeyEd25519 = trxType.PubKeyEd25519,
 	Signature = trxType.Signature
 
 const getAddrOriginHexStr = Symbol('getAddrOriginHexStr'),
-	getSep = Symbol('getSep')
+	getSep = Symbol('getSep'),
+	signHandler = Symbol('signHandler'),
+	cacheSignData = Symbol('cacheSignData')
 
 export default class Tx {
 	/**
@@ -71,6 +73,10 @@ export default class Tx {
 			itx: null,
 			signatureArr: []
 		}
+
+		this.originSenders = null
+		this.chainId_hex = tool.stringToHex(this.tx.chainid)
+
 		// this.tx = Object.assign(this.tx, tx)
 		this.initCodec()
 	}
@@ -114,6 +120,7 @@ export default class Tx {
 	/**
 	 * 发送交易
 	 * @param {Object[]} senders - 发送方
+	 * @param {string} senders[].privateKey 发送方私钥
 	 * @param {string} senders[].addr - 发送方地址
 	 * @param {number} senders[].qos - 发送的qos数量
 	 * @param {Object[]} senders[].qscs - 发送qsc币
@@ -133,8 +140,9 @@ export default class Tx {
 			]
 	 */
 	from(senders) {
-		console.log(this.tx)
+		this.originSenders = senders
 		this.tx.senders = this.newClients(senders)
+		this[cacheSignData](senders)
 		return this
 	}
 
@@ -161,6 +169,7 @@ export default class Tx {
 	 */
 	to(receivers) {
 		this.tx.receivers = this.newClients(receivers)
+		this[cacheSignData](receivers)
 		this.newTx()
 		return this
 	}
@@ -169,49 +178,91 @@ export default class Tx {
 		this.tx.itx = new ITX(this.tx.senders, this.tx.receivers)
 	}
 
-	async sign(privateKey) {
+	async send() {
 		// 得到 signature
-		if (this.tx.senders.length === 1) {
-			this.oneToMany(privateKey)
-		}
-		const keyPair = this._qweb.recoveryAccountByPrivateKey(privateKey).keyPair
-		console.log('keyPair', keyPair)
-		console.log(tool.decodeBase64(privateKey))
+		// 根据 senders 和 receivers 拼接签名数据
+		// 每个 sender 需要单独签名，即有几个sender就需要签名几次
 
-		const chainId_hex = tool.stringToHex(this.tx.chainid)
-		console.log('chainId_hex', chainId_hex)
-		this.tx.signatureArr.push(chainId_hex)
+		const needSignData_arr = await this[signHandler]()
+		const signature_arr = []
+		needSignData_arr.forEach(need => {
+			const account = this._qweb.recoveryAccountByPrivateKey(need.from.privateKey),
+				keyPair = account.keyPair,
+				pubKeyEd25519 = new PubKeyEd25519(keyPair.publicKey)
 
-		console.log(this.tx.signatureArr.join(this[getSep]()))
-		const res = await this._qweb.account.get(this.tx.senders[0].addr)
-		console.log(res)
+			const signature_buffer = Buffer.from(need.arr.join(''), 'hex')
+			const signatureData = nacl.sign.detached(signature_buffer, keyPair.secretKey)
+			console.log(signatureData)
+			console.log(tool.buf2hex(signatureData.buffer))
+			console.log(tool.encodeBase64(signatureData))
 
-		//00000000000000000000000000000007716f732d746573740000000000000007
-		// res.data.result.value.base_account.nonce
-		const nonce_str = `00000000000000000000000000000000${7}`
-		const nonce_32_str = nonce_str.slice(-32),
-			nonce_16_str = nonce_str.slice(-16)
+			const signature = new Signature(pubKeyEd25519, tool.encodeBase64(signatureData), '7')
+			signature_arr.push(signature)
+		})
 
-		const signature_str = this.tx.signatureArr.join(this[getSep]()) + nonce_32_str + chainId_hex //+ nonce_16_str
-		console.log(signature_str)
-		const signature_buffer = Buffer.from(signature_str, 'hex')
-		const signatureData = nacl.sign.detached(signature_buffer, keyPair.secretKey)
-		console.log(signatureData)
-		console.log(tool.buf2hex(signatureData.buffer))
-		console.log(tool.encodeBase64(signatureData))
-
-
-		console.log(tool.decodeBase64('GwJwoChg7SE19bIBucL3yM0STkqb1RmxfIf2a7AKODG+0WckvyDDL2BIiCLewlA7aDQElZsg/ihxYhmR1q+PDw=='))
-
-		const pubKeyEd25519 = new PubKeyEd25519(keyPair.publicKey)
-		const signature = new Signature(pubKeyEd25519, tool.encodeBase64(signatureData), '7')
-		const authTx = new AuthTx(this.tx.itx, [signature], this.tx.chainid, '0')
+		const authTx = new AuthTx(this.tx.itx, signature_arr, this.tx.chainid, '0')
 		// 最终生成的输出的JSON
 		const str = this._codec.marshalJson(authTx)
 		console.log('str', str)
 
 		const bufferArr = this._codec.marshalBinary(authTx)
 		console.log('bufferArr', bufferArr)
+
+		const res = await this._qweb.http.request({
+			url: `/QOSaccounts/send` //地址待定
+		})
+
+		return res
+	}
+
+	async [signHandler]() {
+		const from = this.originSenders
+		const needSignData_arr = []
+		// 添加from的nonce,32位，不够前面补0
+		for (let i = 0; i < from.length; i++) {
+			const f = from[i]
+
+			if (Object.prototype.toString.call(needSignData_arr[i]) !== '[Object Object]') {
+				needSignData_arr[i] = {}
+				needSignData_arr[i].arr = [...this.tx.signatureArr]
+				needSignData_arr[i].from = f
+			}
+
+			needSignData_arr[i].arr.push(this.chainId_hex)
+			const res = await this._qweb.account.get(f.addr)
+			if (res.data.error) {
+				throw new Error(res.data.error.message)
+			}
+			const nonce = res.data.result.value.base_account.nonce
+			// if (nonce === '0') {
+			// 	nonce = 8
+			// } else {
+			// 	nonce = 7
+			// }
+			const nonce_str = `00000000000000000000000000000000${nonce}`
+			const nonce_32_str = nonce_str.slice(-32)
+			console.log('nonce:', nonce)
+			needSignData_arr[i].nonce = nonce
+			needSignData_arr[i].arr.push(nonce_32_str)
+			needSignData_arr[i].arr.push(this.chainId_hex)
+		}
+		return needSignData_arr
+	}
+
+	[cacheSignData](clients) {
+		clients.forEach(f => {
+			// const keyPair = this._qweb.recoveryAccountByPrivateKey(f.privateKey).keyPair
+			this.tx.signatureArr.push(this[getAddrOriginHexStr](f.addr))
+			this.tx.signatureArr.push(tool.stringToHex(f.qos))
+			if (Array.isArray(f.qscs)) {
+				const arrQscs = []
+				f.qscs.forEach(qsc => {
+					arrQscs.push(`${qsc.amount}${qsc.coin_name}`)
+				})
+				if (arrQscs.length > 0)
+					this.tx.signatureArr.push(tool.stringToHex(arrQscs.join(',')))
+			}
+		})
 	}
 
 	[getSep]() {
@@ -243,11 +294,8 @@ export default class Tx {
 	[getAddrOriginHexStr](addr) {
 		/**快捷获取签名的from Hex或者 to Hex 值 --start*/
 		const addr_decode = bech32.decode(addr)
-		console.log('addr_decode', addr_decode)
 		const fromwords = bech32.fromWords(addr_decode.words)
-		console.log('fromwords', fromwords)
 		const addrHex = tool.buf2hex(fromwords)
-		console.log('addrHex', addrHex)
 		return addrHex
 		/**快捷获取签名的from Hex或者 to Hex 值 --end*/
 	}
@@ -292,17 +340,31 @@ if (!window.atob) {
 
 }
 
-function hexToBase64(str) {
-	return btoa(String.fromCharCode.apply(null,
-		str.replace(/\r|\n/g, '').replace(/([\da-fA-F]{2}) ?/g, '0x$1 ').replace(/ +$/, '').split(' '))
-	)
-}
+// function hexToBase64(str) {
+// 	return btoa(String.fromCharCode.apply(null,
+// 		str.replace(/\r|\n/g, '').replace(/([\da-fA-F]{2}) ?/g, '0x$1 ').replace(/ +$/, '').split(' '))
+// 	)
+// }
 
-function base64ToHex(str) {
-	for (var i = 0, bin = atob(str.replace(/[ \r\n]+$/, '')), hex = []; i < bin.length; ++i) {
-		var tmp = bin.charCodeAt(i).toString(16)
-		if (tmp.length === 1) tmp = '0' + tmp
-		hex[hex.length] = tmp
-	}
-	return hex.join(' ')
-}
+// function base64ToHex(str) {
+// 	for (var i = 0, bin = atob(str.replace(/[ \r\n]+$/, '')), hex = []; i < bin.length; ++i) {
+// 		var tmp = bin.charCodeAt(i).toString(16)
+// 		if (tmp.length === 1) tmp = '0' + tmp
+// 		hex[hex.length] = tmp
+// 	}
+// 	return hex.join(' ')
+// }
+
+// ArrayBuffer转为字符串，参数为ArrayBuffer对象
+// function ab2str(buf) {
+// 	return String.fromCharCode.apply(null, new Uint16Array(buf))
+// }
+// // 字符串转为ArrayBuffer对象，参数为字符串
+// function str2ab(str) {
+// 	var buf = new ArrayBuffer(str.length * 2) // 每个字符占用2个字节
+// 	var bufView = new Uint16Array(buf)
+// 	for (var i = 0, strLen = str.length; i < strLen; i++) {
+// 		bufView[i] = str.charCodeAt(i)
+// 	}
+// 	return buf
+// }
