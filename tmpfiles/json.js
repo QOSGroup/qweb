@@ -49,17 +49,18 @@ var test = {
 			"type": "qos/txs/TxTransfer",
 			"value": {
 				"senders": [{
-					"addr": "address13mjc3n3xxj73dhkju9a0dfr4lrfvv3whxqg0dy", "qos": "0", "qscs": [{ "coin_name": "AOE", "amount": "2" }]
+					"addr": "address13mjc3n3xxj73dhkju9a0dfr4lrfvv3whxqg0dy", "qos": "1", "qscs": [{ "coin_name": "AOE", "amount": "100" }]
 				}],
 				"receivers": [{
-					"addr": "address13hkg8nva06hntmnhfupy29c2l9aq9zs879jhez", "qos": "0", "qscs": [{ "coin_name": "AOE", "amount": "2" }]
-				}, {
-					"addr": "address13hkg8nva06hntmnhfupy29c2l9aq9zs879jhez", "qos": "0", "qscs": [{ "coin_name": "AOE", "amount": "2" }]
+					"addr": "address13hkg8nva06hntmnhfupy29c2l9aq9zs879jhez", "qos": "1", "qscs": [{ "coin_name": "AOE", "amount": "100" }]
 				}]
 			}
 		}, "sigature": [{
-			"pubkey": { "type": "tendermint/PubKeyEd25519", "value": "fDLjEW4zeLVCvKKx4iYB00fnp5Mcl3APIIla7KyETOE=" },
-			"signature": "noiI1XrPRiw6UWTAuZb8XatNP0B8x8Dw0INvIsxH1PoAo3SbuwDQLX5kF8CCW9f335di87T3ZI5BsirsS9g9AA==",
+			"pubkey": {
+				"type": "tendermint/PubKeyEd25519",
+				"value": "fDLjEW4zeLVCvKKx4iYB00fnp5Mcl3APIIla7KyETOE="
+			},
+			"signature": "GwJwoChg7SE19bIBucL3yM0STkqb1RmxfIf2a7AKODG+0WckvyDDL2BIiCLewlA7aDQElZsg/ihxYhmR1q+PDw==",
 			"nonce": "7"
 		}], "chainid": "qos-test", "maxgas": "0"
 	}
@@ -73,21 +74,59 @@ var mine = {
 			"type": "qos/txs/TxTransfer",
 			"value": {
 				"senders": [{
-					"addr": "address13mjc3n3xxj73dhkju9a0dfr4lrfvv3whxqg0dy", "qos": "0", "qscs": [{ "coin_name": "AOE", "amount": "2" }]
+					"addr": "address13mjc3n3xxj73dhkju9a0dfr4lrfvv3whxqg0dy", "qos": "1", "qscs": [{ "coin_name": "AOE", "amount": "100" }]
 				}],
 				"receivers": [{
-					"addr": "address13hkg8nva06hntmnhfupy29c2l9aq9zs879jhez", "qos": "0", "qscs": [{ "coin_name": "AOE", "amount": "2" }]
-				}, {
-					"addr": "address13hkg8nva06hntmnhfupy29c2l9aq9zs879jhez", "qos": "0", "qscs": [{ "coin_name": "AOE", "amount": "2" }]
+					"addr": "address13hkg8nva06hntmnhfupy29c2l9aq9zs879jhez", "qos": "1", "qscs": [{ "coin_name": "AOE", "amount": "100" }]
 				}]
 			}
 		}, "sigature": [{
-			"pubKey": { "type": "tendermint/PubKeyEd25519", "value": "fDLjEW4zeLVCvKKx4iYB00fnp5Mcl3APIIla7KyETOE=" },
-			"signature": "MZZlwJOYgGr4N5+Skzb1SRjEKqtSyf60WsOtsV47L7Fpj3jj87nPS/BhaJYfcjBTxRMPYckYPHUwT8qVmZIlBw==",
+			"pubKey": {
+				"type": "tendermint/PubKeyEd25519",
+				"value": "fDLjEW4zeLVCvKKx4iYB00fnp5Mcl3APIIla7KyETOE="
+			},
+			"signature": "GwJwoChg7SE19bIBucL3yM0STkqb1RmxfIf2a7AKODG+0WckvyDDL2BIiCLewlA7aDQElZsg/ihxYhmR1q+PDw==",
 			"nonce": "7"
 		}], "chainid": "qos-test", "maxgas": "0"
 	}
 }
+
+
+var m2m = {
+	"type": "qbase/txs/stdtx",
+	"value": {
+		"itx": {
+			"type": "qos/txs/TxTransfer",
+			"value": {
+				"senders": [{
+					"addr": "address13mjc3n3xxj73dhkju9a0dfr4lrfvv3whxqg0dy",
+					"qos": "4", "qscs": [{ "coin_name": "AOE", "amount": "100" }]
+				}, {
+					"addr": "address12as5uhdpf2y9zjkurx2l6dz8g98qkgryc4x355",
+					"qos": "2", "qscs": null
+				}],
+				"receivers": [{
+					"addr": "address13hkg8nva06hntmnhfupy29c2l9aq9zs879jhez", "qos": "1",
+					"qscs": [{ "coin_name": "AOE", "amount": "100" }]
+				}, {
+					"addr": "address12as5uhdpf2y9zjkurx2l6dz8g98qkgryc4x355",
+					"qos": "5", "qscs": null
+				}]
+			}
+		}, "sigature": [{
+			"pubkey": { "type": "tendermint/PubKeyEd25519", "value": "fDLjEW4zeLVCvKKx4iYB00fnp5Mcl3APIIla7KyETOE=" },
+			"signature": "9QFUruoX6e5zAg2wN/wL/y2R2D+do6NOL7qvQluXOM2DCDyrI0uzWfpSw67pUPXMS1//XRXNkxnVOoIyVQu5CQ==",
+			"nonce": "7"
+		}, {
+			"pubkey": {
+				"type": "tendermint/PubKeyEd25519", "value": "va8Kjc8UCZUD4efbWaW0tRHSE+kxOTei+9rHvQVHvYs="
+			},
+			"signature": "QPFaxlmrh/Z6gB+yvj2e2yFzTNkFOT9pWddxx++7Za9otchBZmZXlIYi99OEF+2tgyN3vNcvTSpdhfSkf4ugAA==",
+			"nonce": "8"
+		}], "chainid": "qos-test", "maxgas": "0"
+	}
+}
+
 
 var t = {
 	"type": "qbase/txs/stdtx",

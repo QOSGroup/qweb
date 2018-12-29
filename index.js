@@ -1,4 +1,5 @@
 // import './src/index'
 
 // import './tmpfiles/txmsg'
-import './example/qweb'
+
+import './example/many2many'
