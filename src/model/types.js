@@ -78,7 +78,7 @@ export default {
 	]),
 	Signature: TypeFactory.create('Signature', [
 		{
-			name: 'pubKey',
+			name: 'pubkey',
 			type: Types.Interface
 		},
 		{
