@@ -16,7 +16,6 @@ export default {
 		{
 			name: 'maxgas',
 			type: Types.String
-			// type: Types.Int8
 		}
 	]),
 	ITX: TypeFactory.create('ITX', [
@@ -43,7 +42,6 @@ export default {
 		{
 			name: 'qos',
 			type: Types.String
-			// type: Types.Int8
 		},
 		{
 			name: 'qscs',
@@ -58,7 +56,6 @@ export default {
 		{
 			name: 'qos',
 			type: Types.String
-			// type: Types.Int8
 		},
 		{
 			name: 'qscs',
@@ -73,7 +70,6 @@ export default {
 		{
 			name: 'amount',
 			type: Types.String
-			// type: Types.Int8
 		}
 	]),
 	Signature: TypeFactory.create('Signature', [
@@ -88,7 +84,6 @@ export default {
 		{
 			name: 'nonce',
 			type: Types.String
-			// type: Types.Int8
 		}
 	])
 }
