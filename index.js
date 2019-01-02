@@ -12,6 +12,3 @@ import QWeb from './src/index'
 })(typeof window !== 'undefined' ? window : this)
 
 export default QWeb
-
-// import './tmpfiles/txmsg'
-// import './example/qweb'
