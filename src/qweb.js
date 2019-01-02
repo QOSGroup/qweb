@@ -36,6 +36,10 @@ export default class QWeb {
 		return this._httpEndpoint
 	}
 
+	get tool() {
+		return tool
+	}
+
 	newAccount() {
 		const mnemonic = this[genarateMnemonic]()
 		const keyPair = this[genarateKeyPair](mnemonic)
