@@ -19,47 +19,7 @@ const getAddrOriginHexStr = Symbol('getAddrOriginHexStr'),
 	cacheSignData = Symbol('cacheSignData')
 
 export default class Tx {
-	/**
-     * Tx
-     * @param {Object} tx  { publicKey: null, privateKey: null, senders: null, receivers: null, chainid: null }
-     * @param {Uint8Array} tx.publicKey - 公钥
-     * @param {Uint8Array} tx.privateKey - 公钥
-     * @param {Array} tx.senders - 发送方
-     * @param {string} tx.senders[].addr - 发送方地址
-     * @param {Array} tx.receivers - 接收方
-     * @param {string} tx.senders[].addr - 接收方地址
-	 * 示例：
-	 * {
-			publicKey: Uint8Array,
-			privateKey: Uint8Array,
-			senders: [
-				{
-					'addr': 'address1k0m8ucnqug974maa6g36zw7g2wvfd4sug6uxay',
-					'qos': '2',
-					'qscs': [
-						{
-							'coin_name': 'AOE',
-							'amount': '5'
-						}
-					]
-				}
-			],
-			receivers: [
-				{
-					'addr': 'address12as5uhdpf2y9zjkurx2l6dz8g98qkgryc4x355',
-					'qos': '2',
-					'qscs': [
-						{
-							'coin_name': 'AOE',
-							'amount': '5'
-						}
-					]
-				}
-			],
-			chainid: 'qos-test'
-		}
-     * 
-     */
+	
 	constructor(qweb) {
 		this._codec = null
 		this._qweb = qweb
@@ -182,7 +142,6 @@ export default class Tx {
 		// 得到 signature
 		// 根据 senders 和 receivers 拼接签名数据
 		// 每个 sender 需要单独签名，即有几个sender就需要签名几次
-
 		const needSignData_arr = await this[signHandler]()
 		const signature_arr = []
 		needSignData_arr.forEach(need => {
@@ -238,11 +197,6 @@ export default class Tx {
 				throw new Error(res.data.error.message)
 			}
 			const nonce = Number(res.data.result.value.base_account.nonce) + 1
-			// if (nonce === '0') {
-			// 	nonce = 8
-			// } else {
-			// 	nonce = 7
-			// }
 			const nonce_str = `00000000000000000000000000000000${nonce.toString(16)}`
 			const nonce_32_str = nonce_str.slice(-32)
 			console.log('nonce:', nonce.toString(16))
@@ -303,72 +257,4 @@ export default class Tx {
 		return addrHex
 		/**快捷获取签名的from Hex或者 to Hex 值 --end*/
 	}
-
-	create() {
-		// const pubKeyEd25519 = new PubKeyEd25519(this.trx.publicKey)
-		// const sender = new Sender(this.sender, 2, 0)
-	}
 }
-
-
-if (!window.atob) {
-	var tableStr = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'
-	var table = tableStr.split('')
-
-	window.atob = function (base64) {
-		if (/(=[^=]+|={3,})$/.test(base64)) throw new Error('String contains an invalid character')
-		base64 = base64.replace(/=/g, '')
-		var n = base64.length & 3
-		if (n === 1) throw new Error('String contains an invalid character')
-		for (var i = 0, j = 0, len = base64.length / 4, bin = []; i < len; ++i) {
-			var a = tableStr.indexOf(base64[j++] || 'A'), b = tableStr.indexOf(base64[j++] || 'A')
-			var c = tableStr.indexOf(base64[j++] || 'A'), d = tableStr.indexOf(base64[j++] || 'A')
-			if ((a | b | c | d) < 0) throw new Error('String contains an invalid character')
-			bin[bin.length] = ((a << 2) | (b >> 4)) & 255
-			bin[bin.length] = ((b << 4) | (c >> 2)) & 255
-			bin[bin.length] = ((c << 6) | d) & 255
-		}
-		return String.fromCharCode.apply(null, bin).substr(0, bin.length + n - 4)
-	}
-
-	window.btoa = function (bin) {
-		for (var i = 0, j = 0, len = bin.length / 3, base64 = []; i < len; ++i) {
-			var a = bin.charCodeAt(j++), b = bin.charCodeAt(j++), c = bin.charCodeAt(j++)
-			if ((a | b | c) > 255) throw new Error('String contains an invalid character')
-			base64[base64.length] = table[a >> 2] + table[((a << 4) & 63) | (b >> 4)] +
-				(isNaN(b) ? '=' : table[((b << 2) & 63) | (c >> 6)]) +
-				(isNaN(b + c) ? '=' : table[c & 63])
-		}
-		return base64.join('')
-	}
-
-}
-
-// function hexToBase64(str) {
-// 	return btoa(String.fromCharCode.apply(null,
-// 		str.replace(/\r|\n/g, '').replace(/([\da-fA-F]{2}) ?/g, '0x$1 ').replace(/ +$/, '').split(' '))
-// 	)
-// }
-
-// function base64ToHex(str) {
-// 	for (var i = 0, bin = atob(str.replace(/[ \r\n]+$/, '')), hex = []; i < bin.length; ++i) {
-// 		var tmp = bin.charCodeAt(i).toString(16)
-// 		if (tmp.length === 1) tmp = '0' + tmp
-// 		hex[hex.length] = tmp
-// 	}
-// 	return hex.join(' ')
-// }
-
-// ArrayBuffer转为字符串，参数为ArrayBuffer对象
-// function ab2str(buf) {
-// 	return String.fromCharCode.apply(null, new Uint16Array(buf))
-// }
-// // 字符串转为ArrayBuffer对象，参数为字符串
-// function str2ab(str) {
-// 	var buf = new ArrayBuffer(str.length * 2) // 每个字符占用2个字节
-// 	var bufView = new Uint16Array(buf)
-// 	for (var i = 0, strLen = str.length; i < strLen; i++) {
-// 		bufView[i] = str.charCodeAt(i)
-// 	}
-// 	return buf
-// }

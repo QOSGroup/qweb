@@ -13,30 +13,4 @@ export default class HTTPEndpoint {
 		this.chainId = config.chainId
 		this.request = createAxioRequest(`${this.HTTPBaseURL}`, 30000)
 	}
-
-	setHTTPBaseURL(url){
-		this.HTTPBaseURL = url
-		this.request = createAxioRequest(`${this.HTTPBaseURL}`, 30000)
-	}
-
-	setChainId(chainId){
-		this.chainId = chainId
-		this.request = createAxioRequest(`${this.HTTPBaseURL}`, 30000)
-	}
-
-	requestGetAccount(address){
-		return this.request({
-			url: `/accounts/${address}`
-		})
-	}
-
-	requestGetTransaction(trxId){
-		return this.request({
-			url: `/block/${trxId}`
-		})
-	}
-
-	requestCreateTransaction(){
-
-	}
 }
