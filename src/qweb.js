@@ -1,10 +1,10 @@
 import nacl from 'tweetnacl'
 import { encodeBase64, decodeBase64 } from 'tweetnacl-util'
-import { default as tool } from '../util/tool'
+import { default as tool } from './util/tool'
 import bip39 from 'bip39'
-import HTTPEndpoint from '../util/HTTPEndpoint'
-import Tx from './tx'
-import Account from './account'
+import HTTPEndpoint from './util/HTTPEndpoint'
+import Tx from './model/tx'
+import Account from './model/account'
 
 const genarateMnemonic = Symbol('genarateMnemonic')
 const genarateKeyPair = Symbol('genarateKeyPair')

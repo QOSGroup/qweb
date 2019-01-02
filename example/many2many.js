@@ -1,4 +1,4 @@
-import QWeb from '../src/model/qweb'
+// import QWeb from '../src/qweb'
 
 // import {
 // 	encodeBase64,
@@ -7,12 +7,9 @@ import QWeb from '../src/model/qweb'
 
 const qweb = new QWeb({ chainId: 'qos-test', baseUrl: 'http://192.168.1.223:1317' })
 
-// const privateKey = 'Ey+2bNFF2gTUV6skSBgRy3rZwo9nS4Dw0l2WpLrhVvV8MuMRbjN4tUK8orHiJgHTR+enkxyXcA8giVrsrIRM4Q=='
-
-
 qweb.account.get('address13mjc3n3xxj73dhkju9a0dfr4lrfvv3whxqg0dy').then(res=>{
 
-	console.log('------1111-------')
+	console.log('-------------')
 	console.log(res)
 })
 
@@ -45,7 +42,8 @@ const promise = qweb.tx.from([
 ]).send()
 
 promise.then(res => {
-	console.log('----------promise res:', res)
+	console.log('----------')
+	console.log('promise res:', res)
 })
 
 

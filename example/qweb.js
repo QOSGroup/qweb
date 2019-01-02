@@ -1,37 +1,41 @@
-import QWeb from '../src/model/qweb'
+// import QWeb from '../src/qweb'
 
 // import {
 // 	encodeBase64,
 // 	// decodeBase64
 // } from 'tweetnacl-util'
 
-const qweb = new QWeb({ chainId: 'qos-test', baseUrl: 'http://192.168.1.223:1317' })
+const qweb = new QWeb({ chainId: 'capricorn-1000', baseUrl: 'http://106.14.178.99:1317' })
 
 // const privateKey = 'Ey+2bNFF2gTUV6skSBgRy3rZwo9nS4Dw0l2WpLrhVvV8MuMRbjN4tUK8orHiJgHTR+enkxyXcA8giVrsrIRM4Q=='
 
 
 const promise = qweb.tx.from([
 	{
-		privateKey: 'Ey+2bNFF2gTUV6skSBgRy3rZwo9nS4Dw0l2WpLrhVvV8MuMRbjN4tUK8orHiJgHTR+enkxyXcA8giVrsrIRM4Q==',
-		addr: 'address13mjc3n3xxj73dhkju9a0dfr4lrfvv3whxqg0dy', qos: '1',
+		privateKey: 'yo6uk98GyulBuAiuVGnaa667tPCyPhlp1ukQSDBCuuZi5gFP24p3cG04QFSlrzUnqmmaTCRNRozhGJRaSzNxpQ==',
+		addr: 'address1rpmtqcexr8m20zpl92llnquhpzdua9stszmhyq',
+		qos: '0',
 		qscs: [
-			// {
-			// 	coin_name: 'AOE', amount: '100'
-			// }
+			{
+				coin_name: 'AOE', amount: '100'
+			}
 		]
 	}
 ]).to([
 	{
-		addr: 'address13hkg8nva06hntmnhfupy29c2l9aq9zs879jhez', qos: '1', qscs: [
-			// {
-			// 	coin_name: 'AOE', amount: '100'
-			// }
+		addr: 'address1pcjs0t9m9vl7vejwttuc2fzfgnutndnrpyw08m',
+		qos: '0',
+		qscs: [
+			{
+				coin_name: 'AOE', amount: '100'
+			}
 		]
 	}
 ]).send()
 
 promise.then(res => {
-	console.log('----------promise res:', res)
+	console.log('----------')
+	console.log('promise res:', res)
 })
 
 // const keyPair = qweb.genarateKeyPair()

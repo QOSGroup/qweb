@@ -4,5 +4,6 @@ src/lib/
 test/
 build/
 tmpfiles/
+example/
 
 !**/*.js
