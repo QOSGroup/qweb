@@ -1,5 +1,14 @@
-// import './src/index'
+import QWeb from './src/index'
 
-// import './tmpfiles/txmsg'
+(function (global) {
 
-import './example/many2many'
+	if (typeof module === 'object' && typeof module.exports === 'object') {
+		module.exports = QWeb
+	} else {
+		global.QWeb = QWeb
+	}
+
+	// Pass this if window is not defined yet
+})(typeof window !== 'undefined' ? window : this)
+
+export default QWeb
