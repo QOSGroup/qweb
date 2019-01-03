@@ -1,7 +1,10 @@
 language: node_js
 node_js: stable
 script: npm run test
-after_success:
+branches:
+  only:
+    - master
+before_deploy:
   - npm run build
 notifications:
   email: false
