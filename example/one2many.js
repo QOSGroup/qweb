@@ -9,13 +9,22 @@ const promise = qweb.tx.from([
 		qos: '0',
 		qscs: [
 			{
-				coin_name: 'AOE', amount: '100'
+				coin_name: 'AOE', amount: '200'
 			}
 		]
 	}
 ]).to([
 	{
 		addr: 'addr2',
+		qos: '0',
+		qscs: [
+			{
+				coin_name: 'AOE', amount: '100'
+			}
+		]
+	},
+	{
+		addr: 'addr3',
 		qos: '0',
 		qscs: [
 			{
