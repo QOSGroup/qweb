@@ -10,7 +10,7 @@ module.exports = {
 	entry: './index.js',
 	output: {
 		path: resolve('dist'),
-		filename: 'bundle.js'
+		filename: 'qweb.js'
 	},
 	module: {
 		rules: [

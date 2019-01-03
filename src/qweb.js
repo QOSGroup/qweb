@@ -40,6 +40,9 @@ export default class QWeb {
 		return tool
 	}
 
+	/**
+	 * 新建账户
+	 */
 	newAccount() {
 		const mnemonic = this[genarateMnemonic]()
 		const keyPair = this[genarateKeyPair](mnemonic)
@@ -52,6 +55,10 @@ export default class QWeb {
 		}
 	}
 
+	/**
+	 * 根据助记符恢复账户
+	 * @param {string} mnemonic 助记符
+	 */
 	recoveryAccountByMnemonic(mnemonic) {
 		const keyPair = this[genarateKeyPair](mnemonic)
 		return {
@@ -63,6 +70,10 @@ export default class QWeb {
 		}
 	}
 
+	/**
+	 * 根据私钥恢复账户
+	 * @param {string} privateKey 私钥
+	 */
 	recoveryAccountByPrivateKey(privateKey) {
 		const privateKey_buffer = decodeBase64(privateKey)
 		const keyPair = nacl.sign.keyPair.fromSecretKey(privateKey_buffer)

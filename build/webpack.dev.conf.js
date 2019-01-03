@@ -10,7 +10,7 @@ const devWebpackConfig = merge(baseWebpackConfig, {
     devtool: 'source-map',
     output: {
 		path: path.join(__dirname, '..', 'example'),
-		filename: 'bundle.js'
+		filename: 'qweb.js'
 	},
 
 })
