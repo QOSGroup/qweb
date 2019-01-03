@@ -13,5 +13,5 @@ package-lock.json
 *.njsproj
 *.sln
 
-dist/*.js
-dist/*.js.map
+# dist/*.js
+# dist/*.js.map
