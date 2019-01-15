@@ -15,3 +15,5 @@ package-lock.json
 
 # dist/*.js
 # dist/*.js.map
+
+dist/test.js

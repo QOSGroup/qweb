@@ -166,8 +166,8 @@ export default class Tx {
 		const str = this._codec.marshalJson(authTx)
 		console.log('str', str)
 
-		const bufferArr = this._codec.marshalBinary(authTx)
-		console.log('bufferArr', bufferArr)
+		// const bufferArr = this._codec.marshalBinary(authTx)
+		// console.log('bufferArr', bufferArr)
 
 		const res = await this._qweb.http.request({
 			url: `/accounts/txSend`, //地址待定

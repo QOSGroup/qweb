@@ -11,4 +11,4 @@ import QWeb from './src/index'
 	// Pass this if window is not defined yet
 })(typeof window !== 'undefined' ? window : this)
 
-export default QWeb
+// export default QWeb
