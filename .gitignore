@@ -17,3 +17,5 @@ package-lock.json
 # dist/*.js.map
 
 dist/test.js
+
+tmpfiles/
