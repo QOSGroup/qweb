@@ -1,6 +1,7 @@
 // import QWeb from '../src/qweb'
 
-const qweb = new QWeb({ chainId: 'capricorn-1000', baseUrl: 'http://106.14.178.99:1317' })
+const baseUrl = "http://qmoonapi.qoschain.info"
+const qweb = new QWeb({ chainId: "capricorn-2000", baseUrl: baseUrl })
 
 const promise = qweb.tx.from([
 	{

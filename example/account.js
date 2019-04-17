@@ -1,5 +1,8 @@
 
-const qweb = new QWeb({ chainId: 'qos-test', baseUrl: 'http://192.168.1.223:1317' })
+const baseUrl = "http://qmoonapi.qoschain.info"
+const qweb = new QWeb({ chainId: "capricorn-2000", baseUrl: baseUrl })
+
+//const qweb = new QWeb({ chainId: 'qos-test', baseUrl: 'http://192.168.1.223:1317' })
 
 const newAccount = qweb.newAccount()
 console.log('--------------------------------------')
