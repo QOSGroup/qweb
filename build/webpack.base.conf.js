@@ -22,7 +22,7 @@ module.exports = {
 				// 		['es2015', { modules: false }]
 				// 	],
 				// },
-				include: [resolve('src'), resolve('test')],
+				include: [resolve('src'), resolve('test'), resolve('node_modules/js-amino'),],
 				// exclude: [
 				// 	resolve('src/lib/Js-Amino')
 				// ]

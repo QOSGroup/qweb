@@ -4,7 +4,7 @@ import testConfig from './config'
 const expect = chai.expect
 
 describe('[create the qosweb]',  ()=>{
-	it('create with default config', ()=>{
+	it('#1 create with default config', ()=>{
 		const qweb = new QWeb({ chainId: testConfig.chainId, baseUrl: testConfig.APINode })
 		expect(qweb).not.null
 		expect(qweb.chainId).to.equal(testConfig.chainId)
@@ -13,7 +13,7 @@ describe('[create the qosweb]',  ()=>{
 })
 
 describe('[account]',  ()=>{
-	it('create the new account', ()=>{
+	it('#1 create the new account', ()=>{
 		const qweb = new QWeb({ chainId: testConfig.chainId, baseUrl: testConfig.APINode })
 		const newAccount = qweb.newAccount()
 		expect(newAccount).not.null
@@ -28,7 +28,7 @@ describe('[account]',  ()=>{
 		console.log(`Mnemonic Words:\t${newAccount.mnemonic}`)
 	})
 
-	it('get the account by private key', ()=>{
+	it('#2 get the account by private key', ()=>{
 		const qweb = new QWeb({ chainId: testConfig.chainId, baseUrl: testConfig.APINode })
 		const newAccount = qweb.newAccount()
 		

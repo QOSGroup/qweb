@@ -34,7 +34,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 var bech32 = require('bech32');
 
-var _require = require('../lib/Js-Amino/src/index'),
+var _require = require('js-amino'),
     Codec = _require.Codec;
 
 var PubKeyEd25519 = _types2.default.PubKeyEd25519,
