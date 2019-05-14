@@ -5,7 +5,7 @@ export default class Account {
 
 	get(address) {
 		return this._qweb.http.request({
-			url: `/QOSaccounts/${address}`
+			url: `nodes/${this._qweb.chainId}/accounts/${address}`
 		})
 	}
 }
