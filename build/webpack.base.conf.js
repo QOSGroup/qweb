@@ -17,15 +17,7 @@ module.exports = {
 			{
 				test: /\.js$/,
 				loader: 'babel-loader',
-				// options: {
-				// 	"presets": [
-				// 		['es2015', { modules: false }]
-				// 	],
-				// },
 				include: [resolve('src'), resolve('test'), resolve('node_modules/js-amino'),],
-				// exclude: [
-				// 	resolve('src/lib/Js-Amino')
-				// ]
 			},
 			{
 				test: /[\\\/]tweetnacl[\\\/]/,
