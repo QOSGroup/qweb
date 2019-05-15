@@ -2,6 +2,7 @@
 const merge = require('webpack-merge')
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 const baseWebpackConfig = require('./webpack.base.conf')
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
 
 const webpackConfig = merge(baseWebpackConfig, {
     mode: 'production',
@@ -25,8 +26,8 @@ const webpackConfig = merge(baseWebpackConfig, {
                 parallel: true
             })
         ]
-    }
-    // plugins: [
+    },
+    plugins: [
     //     new UglifyJsPlugin({
     //         uglifyOptions: {
     //             compress: {
@@ -44,8 +45,8 @@ const webpackConfig = merge(baseWebpackConfig, {
     //         sourceMap: false,
     //         parallel: true
     //     }),
-    //     // new BundleAnalyzerPlugin()
-    // ],
+        new BundleAnalyzerPlugin()
+    ],
 })
 
 module.exports = webpackConfig
