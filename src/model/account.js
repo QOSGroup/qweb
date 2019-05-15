@@ -7,6 +7,6 @@ export default class Account {
 		const result = await this._qweb.http.request({
 			url: `nodes/${this._qweb.chainId}/accounts/${address}`
 		})
-		return result.value
+		return result.data.result.value
 	}
 }

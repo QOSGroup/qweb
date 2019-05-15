@@ -39,14 +39,12 @@ describe('[account]',  ()=>{
 		// expect(targetAccount.mnemonic).to.equal(newAccount.mnemonic)
 	})
 
-	it('#3 my account on TestChain', ()=>{
+	it('#3 my account on TestChain', async ()=>{
 		const qweb = new QWeb({ chainId: testConfig.chainId, baseUrl: testConfig.APINode })
 		const account = qweb.account
 
-		return account.get(testConfig.account.myAccount.address).then(resp=>{
-			console.log('myAccount', resp.data.result)
-			expect(resp.data.result.value.base_account.account_address).to.equal(testConfig.account.myAccount.address)
-		})
+		const detail = await account.get(testConfig.account.myAccount.address)
+		expect(detail.base_account.account_address).to.equal(testConfig.account.myAccount.address)
 	})
 })
 
