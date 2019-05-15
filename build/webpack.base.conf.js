@@ -1,6 +1,4 @@
 const path = require('path')
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
-// const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
 function resolve(dir) {
 	return path.join(__dirname, '..', dir)
 }
@@ -17,15 +15,7 @@ module.exports = {
 			{
 				test: /\.js$/,
 				loader: 'babel-loader',
-				// options: {
-				// 	"presets": [
-				// 		['es2015', { modules: false }]
-				// 	],
-				// },
 				include: [resolve('src'), resolve('test')],
-				// exclude: [
-				// 	resolve('src/lib/Js-Amino')
-				// ]
 			},
 			{
 				test: /[\\\/]tweetnacl[\\\/]/,
