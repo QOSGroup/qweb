@@ -8,7 +8,9 @@ module.exports = {
 	entry: './index.js',
 	output: {
 		path: resolve('dist'),
-		filename: 'qweb.js'
+		filename: 'qweb.js',
+		library: 'QWeb',
+		libraryTarget: 'umd'
 	},
 	module: {
 		rules: [
