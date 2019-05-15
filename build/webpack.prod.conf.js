@@ -10,10 +10,10 @@ const webpackConfig = merge(baseWebpackConfig, {
         minimizer: [
             new UglifyJsPlugin({
                 uglifyOptions: {
-                    compress: {
-                        warnings: false,
-                    },
-                    warning: 'verbose',
+                    // compress: {
+                    //     warnings: false,
+                    // },
+                    // warning: 'verbose',
                     ecma: 6,
                     beautify: false,
                     comments: false,

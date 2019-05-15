@@ -4,7 +4,7 @@ Object.defineProperty(exports, "__esModule", {
 	value: true
 });
 
-var _require = require('../lib/Js-Amino/src'),
+var _require = require('js-amino'),
     TypeFactory = _require.TypeFactory,
     Types = _require.Types;
 

@@ -3,9 +3,10 @@ export default class Account {
 		this._qweb = qweb
 	}
 
-	get(address) {
-		return this._qweb.http.request({
-			url: `/QOSaccounts/${address}`
+	async get(address) {
+		const result = await this._qweb.http.request({
+			url: `nodes/${this._qweb.chainId}/accounts/${address}`
 		})
+		return result.data.result.value
 	}
 }

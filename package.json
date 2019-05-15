@@ -8,6 +8,7 @@
     "build": "npx babel src --out-dir dist/cmjs && npx webpack --config build/webpack.prod.conf.js",
     "dev": "webpack-dev-server --watch-content-base --inline --content-base ./example --port 9393 --host 127.0.0.1 --open --hot --config build/webpack.dev.conf.js",
     "lint": "eslint --ext .js,.vue src",
+    "lintfix": "eslint  --fix --ext .js,.vue src",
     "test": "npm run lint",
     "unittest": "karma start karma.conf.js"
   },
@@ -49,18 +50,19 @@
   },
   "dependencies": {
     "axios": "^0.18.0",
+    "babel-runtime": "^6.26.0",
     "bech32": "^1.1.3",
     "bip39": "^2.5.0",
     "ed25519-hd-key": "^0.5.0",
     "exports-loader": "^0.7.0",
     "imports-loader": "^0.8.0",
     "int53": "^0.2.4",
+    "js-amino": "^1.0.0",
     "js-sha256": "^0.9.0",
+    "nanoseconds": "^1.0.1",
     "signed-varint": "^2.0.1",
     "tweetnacl": "^1.0.0",
     "tweetnacl-util": "^0.15.0",
-    "varint": "^5.0.0",
-    "nanoseconds": "^1.0.1",
-    "babel-runtime": "^6.26.0"    
+    "varint": "^5.0.0"
   }
 }

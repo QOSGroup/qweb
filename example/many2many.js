@@ -1,6 +1,7 @@
 // import QWeb from '../src/qweb'
 
-const qweb = new QWeb({ chainId: 'qos-test', baseUrl: 'http://192.168.1.223:1317' })
+const baseUrl = "http://qmoonapi.qoschain.info"
+const qweb = new QWeb({ chainId: "capricorn-2000", baseUrl: baseUrl })
 
 qweb.account.get('addr1').then(res=>{
 
