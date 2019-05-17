@@ -1,6 +1,6 @@
 import nacl from 'tweetnacl'
-const bech32 = require('bech32')
-let { Codec } = require('js-amino')
+import bech32 from 'bech32'
+import { Codec } from 'js-amino'
 import trxType from './types'
 import { ClientType } from './enums'
 import { default as tool } from '../util/tool'

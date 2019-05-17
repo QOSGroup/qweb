@@ -1,4 +1,4 @@
-let { TypeFactory, Types } = require('../lib/Js-Amino/src')
+import { TypeFactory, Types } from 'Js-Amino'
 
 export default {
 	/**

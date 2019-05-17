@@ -5,6 +5,7 @@ import bip39 from 'bip39'
 import HTTPEndpoint from './util/HTTPEndpoint'
 import Tx from './model/tx'
 import Account from './model/account'
+import bech32 from 'bech32'
 
 const genarateMnemonic = Symbol('genarateMnemonic')
 const genarateKeyPair = Symbol('genarateKeyPair')
@@ -111,7 +112,7 @@ export default class QWeb {
 	 * @param {Uint8Array} publicKey 公钥
 	 */
 	getAddress(publicKey) {
-		const bech32 = require('bech32')
+		// const bech32 = require('bech32')
 		const pkAarry = tool.getHash256(publicKey)
 		const nw = bech32.toWords((Buffer.from(pkAarry.slice(0, 20))))
 		const addr = bech32.encode('address', nw)

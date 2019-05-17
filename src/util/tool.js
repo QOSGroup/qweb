@@ -1,8 +1,9 @@
 import { encodeBase64, decodeBase64 } from 'tweetnacl-util'
+import sha256 from 'js-sha256'
 
 export default {
 	getHash256(input) {
-		let sha256 = require('js-sha256')
+		// let sha256 = require('js-sha256')
 		let hash2 = sha256.update(input)
 		return hash2.array()
 	},
