@@ -5,19 +5,21 @@ function resolve(dir) {
 
 module.exports = {
 	context: resolve('./'),
-	entry: './index.js',
+	entry: './src/index.js',
 	output: {
 		path: resolve('dist'),
 		filename: 'qweb.js',
 		library: 'QWeb',
-		libraryTarget: 'umd'
+		libraryTarget: 'umd',
+		umdNamedDefine: true,
+		libraryExport: "default",
 	},
 	module: {
 		rules: [
 			{
 				test: /\.js$/,
 				loader: 'babel-loader',
-				include: [resolve('src'), resolve('test'), resolve('node_modules/js-amino')],
+				include: [resolve('src'), resolve('test'), resolve('node_modules/js-amino/src')],
 			},
 			{
 				test: /[\\\/]tweetnacl[\\\/]/,

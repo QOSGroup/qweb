@@ -1,4 +1,4 @@
-let { TypeFactory, Types } = require('js-amino')
+import { TypeFactory, Types } from 'Js-Amino'
 
 export default {
 	AuthTx: TypeFactory.create('AuthTx', [
