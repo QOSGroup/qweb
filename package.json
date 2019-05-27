@@ -5,8 +5,8 @@
   "main": "dist/cmjs/index.js",
   "module": "src/index.js",
   "scripts": {
-    "build": "npx webpack --config build/webpack.prod.conf.js",
-    "dev": "webpack-dev-server --watch-content-base --inline --content-base ./example --port 9393 --host 127.0.0.1 --open --hot --config build/webpack.dev.conf.js",
+    "build": "npx webpack --config build/webpack.prod.conf.js --progress",
+    "dev": "webpack-dev-server --watch-content-base --inline --content-base ./example --port 9393 --host 127.0.0.1 --open --hot --config build/webpack.dev.conf.js --progress",
     "lint": "eslint --ext .js,.vue src",
     "lintfix": "eslint  --fix --ext .js,.vue src",
     "test": "npm run lint",

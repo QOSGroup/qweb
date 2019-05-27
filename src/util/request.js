@@ -7,7 +7,7 @@ const createAxioRequest = (baseURL, timeout)=>{
 	})
 }
 
-export default class HTTPEndpoint {
+export default class Request {
 	constructor(config){
 		this.HTTPBaseURL = config.baseUrl
 		this.chainId = config.chainId
