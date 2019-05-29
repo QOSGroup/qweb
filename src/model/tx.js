@@ -52,7 +52,7 @@ export default class Tx {
 		codec.registerConcrete(new AuthTx(), 'qbase/txs/stdtx', {})
 		codec.registerConcrete(new QSC(), 'qsc', {})
 		codec.registerConcrete(new Sender(), 'Sender', {})
-		codec.registerConcrete(new Receiver(), 'Sender', {})
+		codec.registerConcrete(new Receiver(), 'Receiver', {})
 		codec.registerConcrete(new Signature, 'Signature', {})
 		this._codec = codec
 	}

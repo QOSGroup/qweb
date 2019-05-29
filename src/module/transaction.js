@@ -1,25 +1,19 @@
 import nacl from 'tweetnacl'
 import bech32 from 'bech32'
-import { Codec } from 'js-amino'
-import trxType from '../model/types'
+// import { Codec } from '../lib/js-amino/src'
+const { Codec } = require('js-amino')
 import { ClientType } from '../model/enums'
-import { default as tool } from '../util/tool'
+import tool from '../util/tool'
 
-const PubKeyEd25519 = trxType.PubKeyEd25519,
-	ITX = trxType.ITX,
-	AuthTx = trxType.AuthTx,
-	Sender = trxType.Sender,
-	Receiver = trxType.Receiver,
-	QSC = trxType.QSC,
-	Signature = trxType.Signature
+import { Signature, TxStd, TxTransfer , Sender, Receiver, QSC, PubKeyEd25519 } from '../model/property'
 
-const getAddrOriginHexStr = Symbol('getAddrOriginHexStr'),
-	getSep = Symbol('getSep'),
-	signHandler = Symbol('signHandler'),
-	cacheSignData = Symbol('cacheSignData')
+const getAddrOriginHexStr = Symbol('getAddrOriginHexStr')
+const getSep = Symbol('getSep')
+const signHandler = Symbol('signHandler')
+const cacheSignData = Symbol('cacheSignData')
 
 export default class Transaction {
-	
+
 	constructor(qweb) {
 		this._codec = null
 		this._qweb = qweb
@@ -48,12 +42,12 @@ export default class Transaction {
 	initCodec() {
 		const codec = new Codec()
 		codec.registerConcrete(new PubKeyEd25519(), 'tendermint/PubKeyEd25519', {})
-		codec.registerConcrete(new ITX(), 'qos/txs/TxTransfer', {})
-		codec.registerConcrete(new AuthTx(), 'qbase/txs/stdtx', {})
+		codec.registerConcrete(new TxTransfer(), 'qos/txs/TxTransfer', {})
+		codec.registerConcrete(new TxStd(), 'qbase/txs/stdtx', {})    
 		codec.registerConcrete(new QSC(), 'qsc', {})
 		codec.registerConcrete(new Sender(), 'Sender', {})
-		codec.registerConcrete(new Receiver(), 'Sender', {})
-		codec.registerConcrete(new Signature, 'Signature', {})
+		codec.registerConcrete(new Receiver(), 'Receiver', {})
+		codec.registerConcrete(new Signature, 'qbase/txs/signature', {})
 		this._codec = codec
 	}
 
@@ -67,10 +61,14 @@ export default class Transaction {
 				})
 			}
 			let tmpClient = null
+			const addr = bech32.decode(client.addr)
+			const bytes = bech32.fromWords(addr.words)
+			// const addrBytes = new Uint8Array(addr.words)
+			console.log(bytes)
 			if (clientType === ClientType.receiver) {
-				tmpClient = new Receiver(client.addr, client.qos, qscs)
+				tmpClient = new Receiver(bytes, client.qos, qscs)
 			} else {
-				tmpClient = new Sender(client.addr, client.qos, qscs)
+				tmpClient = new Sender(bytes, client.qos, qscs)
 			}
 			arrClient.push(tmpClient)
 		})
@@ -135,47 +133,55 @@ export default class Transaction {
 	}
 
 	newTx() {
-		this.tx.itx = new ITX(this.tx.senders, this.tx.receivers)
+		this.tx.itx = new TxTransfer(this.tx.senders, this.tx.receivers)
 	}
 
 	async send() {
+		console.log('in send')
 		// 得到 signature
 		// 根据 senders 和 receivers 拼接签名数据
 		// 每个 sender 需要单独签名，即有几个sender就需要签名几次
 		const needSignData_arr = await this[signHandler]()
 		const signature_arr = []
 		needSignData_arr.forEach(need => {
-			const account = this._qweb.recoveryAccountByPrivateKey(need.from.privateKey),
+			const account = this._qweb.account.recoveryAccountByPrivateKey(need.from.privateKey),
 				keyPair = account.keyPair,
 				pubKeyEd25519 = new PubKeyEd25519(keyPair.publicKey)
 
-			console.log('need.arr:', need.arr)
+			// console.log('need.arr:', need.arr)
 
 			const signature_buffer = Buffer.from(need.arr.join(''), 'hex')
 			const signatureData = nacl.sign.detached(signature_buffer, keyPair.secretKey)
-			console.log(signatureData)
-			console.log(tool.buf2hex(signatureData.buffer))
-			console.log(tool.encodeBase64(signatureData))
-
-			const signature = new Signature(pubKeyEd25519, tool.encodeBase64(signatureData), need.nonce + '')
+			// console.log(signatureData)
+			// console.log(tool.buf2hex(signatureData.buffer))
+			// console.log(tool.encodeBase64(signatureData))
+			// tool.encodeBase64(signatureData)
+			console.log('signatureData',signatureData)
+			const signature = new Signature(pubKeyEd25519, signatureData, need.nonce + '')
 			signature_arr.push(signature)
 		})
+    
+		console.log('.................................................................')
+		console.log(this.tx.itx)
+		console.log(signature_arr)
 
-		const authTx = new AuthTx(this.tx.itx, signature_arr, this.tx.chainid, '0')
+		const txStd = new TxStd(this.tx.itx, signature_arr, this.tx.chainid, '0')
 		// 最终生成的输出的JSON
-		const str = this._codec.marshalJson(authTx)
+		const str = this._codec.marshalJson(txStd)
 		console.log('str', str)
 
-		// const bufferArr = this._codec.marshalBinary(authTx)
-		// console.log('bufferArr', bufferArr)
+		const bufferArr = this._codec.marshalBinary(txStd)
+		console.log('bufferArr', bufferArr.join(','))
+		// let decodedDataTx = new TxStd()
+		// this._codec.unMarshalJson(str, decodedDataTx)
 
-		const res = await this._qweb.http.request({
-			url: `/accounts/txSend`, //地址待定
-			method: 'post',
-			data: str
-		})
+		// const res = await this._qweb.http.request({
+		// 	url: `/accounts/txSend`, //地址待定
+		// 	method: 'post',
+		// 	data: str
+		// })
 
-		return res
+		// return res
 	}
 
 	async [signHandler]() {
@@ -192,14 +198,14 @@ export default class Transaction {
 			}
 
 			needSignData_arr[i].arr.push(this.chainId_hex)
-			const res = await this._qweb.account.get(f.addr)
-			if (res.data.error) {
-				throw new Error(res.data.error.message)
-			}
-			const nonce = Number(res.data.result.value.base_account.nonce) + 1
+			// const res = await this._qweb.account.get(f.addr)
+			// if (res.data.error) {
+			// 	throw new Error(res.data.error.message)
+			// }
+			const nonce = 1 // Number(res.data.result.value.base_account.nonce) + 1
 			const nonce_str = `00000000000000000000000000000000${nonce.toString(16)}`
 			const nonce_32_str = nonce_str.slice(-32)
-			console.log('nonce:', nonce.toString(16))
+			// console.log('nonce:', nonce.toString(16))
 			needSignData_arr[i].nonce = nonce
 			needSignData_arr[i].arr.push(nonce_32_str)
 			needSignData_arr[i].arr.push(this.chainId_hex)

@@ -89,10 +89,10 @@ export default class Account {
 		return addr
 	}
 
-	async get(address) {
-		const result = await this._qweb.http.request({
-			url: `nodes/${this._qweb.chainId}/accounts/${address}`
-		})
-		return result.data.result.value
-	}
+	// async get(address) {
+	// 	// const result = await this._qweb.http.request({
+	// 	// 	url: `nodes/${this._qweb.chainId}/accounts/${address}`
+	// 	// })
+	// 	// return result.data.result.value
+	// }
 }

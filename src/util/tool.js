@@ -50,5 +50,11 @@ export default {
 	},
 	decodeBase64(value) {
 		return decodeBase64(value)
+	},
+	strToUint8(str){
+		for (var i = 0,arr=[]; i < str.length;i++){
+			arr.push(str.charCodeAt(i))
+		}
+		return new Uint8Array(arr)
 	}
 }
