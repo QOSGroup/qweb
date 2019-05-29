@@ -19,8 +19,8 @@ module.exports = function (api) {
 		[
 			'@babel/transform-runtime'
 		],
-		['@babel/plugin-transform-classes'],
-		['@babel/plugin-proposal-class-properties'],
+		// ['@babel/plugin-transform-classes'],
+		// ['@babel/plugin-proposal-class-properties'],
 		['@babel/plugin-transform-modules-commonjs'],
 		['@babel/plugin-proposal-object-rest-spread', { 'loose': true, 'useBuiltIns': true }]
 	]

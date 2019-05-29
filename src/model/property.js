@@ -48,7 +48,7 @@ export const Signature = TypeFactory.create('Signature', [
 export const Sender = TypeFactory.create('Sender', [
 	{
 		name: 'addr',
-		type: Types.ByteSlice
+		type: Types.String
 	},
 	{
 		name: 'qos',
@@ -63,7 +63,7 @@ export const Sender = TypeFactory.create('Sender', [
 export const Receiver = TypeFactory.create('Receiver', [
 	{
 		name: 'addr',
-		type: Types.ByteSlice
+		type: Types.String
 	},
 	{
 		name: 'qos',

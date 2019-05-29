@@ -66,9 +66,9 @@ export default class Transaction {
 			// const addrBytes = new Uint8Array(addr.words)
 			console.log(bytes)
 			if (clientType === ClientType.receiver) {
-				tmpClient = new Receiver(bytes, client.qos, qscs)
+				tmpClient = new Receiver(client.addr, client.qos, qscs)
 			} else {
-				tmpClient = new Sender(bytes, client.qos, qscs)
+				tmpClient = new Sender(client.addr, client.qos, qscs)
 			}
 			arrClient.push(tmpClient)
 		})
