@@ -1,3 +1,4 @@
+import Account from "./Account";
 import createAxioRequest from "./utils/request";
 
 class Qweb {
@@ -16,7 +17,10 @@ class Qweb {
   public get request() {
     return createAxioRequest(this.config.baseUrl)
   }
-}
 
+  public get account() {
+    return new Account(this)
+  }
+}
 
 export default Qweb
