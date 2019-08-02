@@ -1,1 +1,1 @@
-export * from './lib/Qweb';
+export * from './lib/Qweb'
