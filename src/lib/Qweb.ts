@@ -1,5 +1,5 @@
-import Account from "./Account";
-import createAxioRequest from "./utils/request";
+import Account from './Account'
+import createAxioRequest from './utils/request'
 
 class Qweb {
   public readonly config: {
