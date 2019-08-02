@@ -18,7 +18,7 @@ class Qweb {
     return createAxioRequest(this.config.baseUrl)
   }
 
-  public get account() {
+  public newAccount() {
     return new Account(this)
   }
 }

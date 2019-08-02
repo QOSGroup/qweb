@@ -7,7 +7,7 @@
   "rules": {
     "interface-name": [
       true,
-      "never-prefix"
+      "always-prefix"
     ],
     // TODO: allow devDependencies only in **/*.spec.ts files:
     // waiting on https://github.com/palantir/tslint/pull/3708
@@ -24,10 +24,10 @@
       "call-signature"
     ],
     // Immutability rules
-    "readonly-keyword": true,
-    "readonly-array": true,
+    "readonly-keyword": false,
+    "readonly-array": false,
     "no-let": true,
-    "no-object-mutation": true,
+    "no-object-mutation": false,
     "no-delete": true,
     "no-method-signature": true,
     // Functional style rules
@@ -52,6 +52,17 @@
       "avoid-escape",
       "avoid-template"
     ],
-    "semicolon": [false, "never"]
+    "semicolon": [false, "never"],
+    "no-unused-expression": false,
+    "no-unused-variable": [true, {"ignore-pattern": "^_"}],
+    "variable-name": {
+      "options": [
+        "ban-keywords",
+        "check-format",
+        "allow-leading-underscore",
+        "allow-pascal-case"
+      ]
+    },
+    "object-literal-sort-keys": false
   }
 }
