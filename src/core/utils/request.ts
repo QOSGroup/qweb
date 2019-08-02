@@ -1,5 +1,5 @@
 import axios, { AxiosInstance } from 'axios';
-import { isNotEmpty } from '.';
+import { isNotEmpty } from '../utils';
 
 // tslint:disable-next-line: no-let
 let httpRequest!: AxiosInstance;
