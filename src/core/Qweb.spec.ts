@@ -6,5 +6,13 @@ test('init Qweb', t => {
 
   t.log(qweb)
 
+  const mnemonic = qweb.key.generateMnemonic()
+
+  t.is(mnemonic.split(' ').length, 24)
+
+  const account = qweb.newAccount(mnemonic)
+
+  t.log(account)
+
   t.is(qweb.config.chainId, '1')
 })

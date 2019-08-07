@@ -1,3 +1,4 @@
+import { encodeBase64 } from 'tweetnacl-util'
 import Qweb from './qweb'
 import { IAuthTx, IPubkey, IQSC, ISigature, ITrader } from './types/types';
 import { isNotEmpty } from './utils';
@@ -20,8 +21,14 @@ export interface IUserTx {
   qscs: IQSC[]
 }
 
+export interface IKeyPair {
+  publicKey: Uint8Array;
+  secretKey: Uint8Array;
+}
+
 export interface IAccount {
   addr: string;
+  keypair: IKeyPair;
   pubKey: string;
   privateKey: string;
 }
@@ -32,10 +39,15 @@ class Account {
   public qos: number = 0
   public qscs: IQSC[] = []
 
-  constructor(controller: Qweb, account?: IAccount) {
+  constructor(controller: Qweb, keyPair?: IKeyPair) {
     this.qweb = controller
-    if (account) {
-      this.account = account
+    if (keyPair) {
+      this.account = {
+        addr: this.qweb.key.getAddress(keyPair.publicKey),
+        keypair: keyPair,
+        pubKey: encodeBase64(keyPair.publicKey),
+        privateKey: encodeBase64(keyPair.secretKey)
+      }
     }
   }
 

@@ -1,9 +1,9 @@
 {
   "extends": "./tsconfig",
   "compilerOptions": {
-    "target": "es2015",
+    "target": "esnext",
     "outDir": "build/module",
-    "module": "es2015"
+    "module": "esnext"
   },
   "exclude": [
     "node_modules/**"
