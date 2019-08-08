@@ -22,21 +22,14 @@ module.exports = {
         filename: '[name].js',// 生成的fiename需要与package.json中的main一致
         path: path.resolve(__dirname, 'dist'),
         libraryTarget: 'umd',
+        umdNamedDefine: true
+    },
+    performance: {
+        hints:false
     },
     module: {
+        unknownContextCritical: false,
         rules: [
-            {
-                test: /\.tsx?$/,
-                use: [
-                    {
-                        loader: 'tslint-loader',
-                        options: {
-                            configFile: path.resolve(__dirname, './tslint.json'),
-                        },
-                    },
-                ],
-                exclude: /node_modules/,
-            },
             {
                 test: /\.tsx?$/,
                 use: [
@@ -46,10 +39,10 @@ module.exports = {
                             // 指定特定的ts编译配置，为了区分脚本的ts配置
                             configFile: path.resolve(__dirname, './tsconfig.json'),
                         },
-                    },
+                    }
                 ],
                 exclude: /node_modules/,
-            },
+            }
         ],
     },
     plugins: [],
