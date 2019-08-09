@@ -1,14 +1,5 @@
 const path = require('path');
 
-let pathsToClean = ['build'];
-
-let cleanOptions = {
-    root: path.resolve(__dirname),
-    // exclude: ['shared.js'],
-    verbose: true,
-    dry: false,
-};
-
 module.exports = {
     resolve: {
         extensions: ['.js', '.ts', '.json'],
@@ -25,7 +16,7 @@ module.exports = {
         umdNamedDefine: true
     },
     performance: {
-        hints:false
+        hints: false
     },
     module: {
         unknownContextCritical: false,
