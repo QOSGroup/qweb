@@ -1,6 +1,6 @@
 const path = require('path');
 
-let pathsToClean = ['dist'];
+let pathsToClean = ['build'];
 
 let cleanOptions = {
     root: path.resolve(__dirname),
@@ -20,7 +20,7 @@ module.exports = {
     },
     output: {
         filename: '[name].js',// 生成的fiename需要与package.json中的main一致
-        path: path.resolve(__dirname, 'dist'),
+        path: path.resolve(__dirname, 'build/umd'),
         libraryTarget: 'umd',
         umdNamedDefine: true
     },
