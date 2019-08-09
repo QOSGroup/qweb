@@ -19,7 +19,7 @@ module.exports = {
         "index": './src/index.ts',
     },
     output: {
-        filename: '[name].js',// 生成的fiename需要与package.json中的main一致
+        filename: 'qweb.js',// 生成的fiename需要与package.json中的main一致
         path: path.resolve(__dirname, 'build/umd'),
         libraryTarget: 'umd',
         umdNamedDefine: true
@@ -37,7 +37,7 @@ module.exports = {
                         loader: 'ts-loader',
                         options: {
                             // 指定特定的ts编译配置，为了区分脚本的ts配置
-                            configFile: path.resolve(__dirname, './tsconfig.json'),
+                            configFile: path.resolve(__dirname, './tsconfig.module.umd.json'),
                         },
                     }
                 ],
