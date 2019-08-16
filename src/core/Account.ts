@@ -18,7 +18,7 @@ export interface IUserTx {
   /**
    * QSC对象数组
    */
-  qscs: IQSC[]
+  qscs?: IQSC[]
 }
 
 export interface IKeyPair {
@@ -53,7 +53,7 @@ class Account {
 
   public async setTx(tx: IUserTx | IUserTx[]) {
     return new Promise((resolve: any, _reject: any) => {
-      
+
       resolve(this.makeAuthTx(tx))
     })
   }
@@ -66,10 +66,16 @@ class Account {
   private makeAuthTx(tx: IUserTx | IUserTx[]) {
     const receivers: ITrader[] = this.makeReceivers(tx)
     const acc = this.account as IAccount
-    for (const item of (tx as IUserTx[])) {
-      this.qos += item.qos
-      this.makeSenderQSCs(item)
+    if (Array.isArray(tx)) {
+      for (const item of (tx as IUserTx[])) {
+        this.qos += item.qos
+        this.makeSenderQSCs(item)
+      }
+    } else {
+      this.qos = tx.qos
+      this.makeSenderQSCs(tx)
     }
+
     const senders: ITrader[] = [{
       addr: acc.addr,
       qos: this.qos,
@@ -87,6 +93,8 @@ class Account {
       nonce: '1'
     }
 
+    // tslint:disable-next-line: no-console
+    console.log('acc.pubKey', JSON.stringify(acc.pubKey))
     const authTx: IAuthTx = {
       type: 'qbase/txs/stdtx',
       value: {
@@ -102,11 +110,13 @@ class Account {
         maxgas: 0
       }
     }
-
     return authTx
   }
 
   private makeSenderQSCs(receiver: IUserTx) {
+    if (!isNotEmpty(receiver.qscs)) {
+      return
+    }
     for (const item of receiver.qscs) {
       const sameQsc = this.qscs.find(x => x.coin_name === item.coin_name)
       if (isNotEmpty(sameQsc)) {
@@ -131,8 +141,10 @@ class Account {
 
   private makeReceiver(tx: IUserTx) {
     const qscs: IQSC[] = []
-    for (const qsc of tx.qscs) {
-      qscs.push(qsc)
+    if (isNotEmpty(tx.qscs)) {
+      for (const qsc of tx.qscs) {
+        qscs.push(qsc)
+      }
     }
 
     const receiver: ITrader = {
