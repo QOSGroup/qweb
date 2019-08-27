@@ -44,11 +44,17 @@ function makeSignMsg({ account, tx, chainid, maxGas, nonce }
   // concat buffer of qosAmount
   arrMsg = arrMsg.concat([...allData.qosAmount.toBuffer()])
   // concat buffer of qscAmount
+  const qscArray: string[] = []
   for (const qsc of allData.qscAmountArr) {
-    arrMsg = arrMsg.concat([...stringToBuffer(`${qsc.amount}${qsc.coinName}`)])
+    qscArray.push(`${qsc.amount}${qsc.coinName}`)
   }
-  
+
+  // compose qsc string , e.g. 2qsca,3qscb
+  const qscString = qscArray.join(',')
+  arrMsg = arrMsg.concat([...stringToBuffer(qscString)])
+
   arrMsg = arrMsg.concat([...allData.arrReceiver])
+  
   const chaidBufferArray = [...stringToBuffer(chainid)]
   arrMsg = arrMsg.concat(chaidBufferArray)
   arrMsg = arrMsg.concat([...Int64ToBuffer(maxGas)])
@@ -80,7 +86,7 @@ function txIsArrayForComposeData(tx: IUserTx[], coinNameArr: string[]) {
     arrReceiver = arrReceiver.concat(getOriginAddress(item.to))
     arrReceiver = arrReceiver.concat([...Int64ToBuffer(item.qos)])
 
-    const cqscAmountArr: any[] = []
+    const cqscAmountArr: string[] = []
     if (item.qscs && item.qscs.length > 0) {
       for (const coinName of coinNameArr) {
         const cqsc = item.qscs.filter(x => x.coin_name.toLowerCase() === coinName).reduce((pre, current) => {
@@ -89,12 +95,9 @@ function txIsArrayForComposeData(tx: IUserTx[], coinNameArr: string[]) {
             amount: pre.amount + current.amount
           }
         })
-        cqscAmountArr.push({
-          coinName,
-          amount: cqsc.amount
-        })
+        cqscAmountArr.push(`${cqsc.amount}${coinName}`)
         const index = qscAmountArr.findIndex(x => x.coinName === coinName)
-        logger.debug('index: ', index , coinName)
+        logger.debug('index: ', index, coinName)
         if (index > -1) {
           qscAmountArr[index].amount += cqsc.amount
         } else {
@@ -104,9 +107,7 @@ function txIsArrayForComposeData(tx: IUserTx[], coinNameArr: string[]) {
           })
         }
       }
-    }
-    for (const qsc of cqscAmountArr) {
-      arrReceiver = arrReceiver.concat([...stringToBuffer(`${qsc.amount}${qsc.coinName}`)])
+      arrReceiver = arrReceiver.concat([...stringToBuffer(cqscAmountArr.join(','))])
     }
   }
   return {
@@ -124,6 +125,7 @@ function txForComposeData(tx: IUserTx, coinNameArr: string[]) {
   qosAmount = tx.qos
   arrReceiver = arrReceiver.concat(getOriginAddress(tx.to))
   arrReceiver = arrReceiver.concat([...Int64ToBuffer(tx.qos)])
+  const cqscAmountArr: string[] = []
   if (tx.qscs && tx.qscs.length > 0) {
     for (const coinName of coinNameArr) {
       const cqsc = tx.qscs.filter(x => x.coin_name.toLowerCase() === coinName).reduce((pre, current) => {
@@ -132,14 +134,13 @@ function txForComposeData(tx: IUserTx, coinNameArr: string[]) {
           amount: pre.amount + current.amount
         }
       })
+      cqscAmountArr.push(`${cqsc.amount}${coinName}`)
       qscAmountArr.push({
         coinName,
         amount: cqsc.amount
       })
     }
-  }
-  for (const qsc of qscAmountArr) {
-    arrReceiver = arrReceiver.concat([...stringToBuffer(`${qsc.amount}${qsc.coinName}`)])
+    arrReceiver = arrReceiver.concat([...stringToBuffer(cqscAmountArr.join(','))])
   }
   return {
     qosAmount: new Int64BE(qosAmount),

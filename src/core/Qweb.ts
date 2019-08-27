@@ -1,7 +1,7 @@
 import nacl from 'tweetnacl'
-import { decodeBase64 } from 'tweetnacl-util'
 import Account from './Account'
 import SecretKey from './SecretKey'
+import { decodeBase64 } from './utils';
 import createAxioRequest from './utils/request'
 
 class Qweb {

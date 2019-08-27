@@ -1,10 +1,10 @@
 import test from 'ava'
+// import { marshalTx } from '../lib/web.js'
 import Qweb from './Qweb'
-import { signMsg } from './utils/business'
 import logger from './utils/log'
 
 test('init Qweb', async t => {
-  const qweb = new Qweb({ chainId: 'capricorn-2000', baseUrl: 'baseUrl' })
+  const qweb = new Qweb({ chainId: 'qweb.config.chainId', baseUrl: 'baseUrl' })
 
   t.log(qweb)
 
@@ -23,38 +23,51 @@ test('init Qweb', async t => {
 
   // const acc = new Account(qweb, )
 
-  // const tx = await account.setTx({
-  //   to: 'address12as5uhdpf2y9zjkurx2l6dz8g98qkgryc4x355',
-  //   qos: 1
-  // })
+  const tx = await account.sendTx([{
+    to: 'address1eep59h9ez4thymept8nxl0padlrc6r78fsjmp3',
+    qos: 2,
+    qscs: [{
+      amount: 3,
+      coin_name: 'QSC'
+    },
+    {
+      amount: 3,
+      coin_name: 'AOE'
+    }]
+  }])
 
-  // logger.info(JSON.stringify(tx))
+  logger.info(JSON.stringify(tx))
+
+  // const marshaled = marshalTx(tx)
+
+  // logger.debug('marshaled: ', marshaled)
 
   // const originAddr = getOriginAddress('address1k0m8ucnqug974maa6g36zw7g2wvfd4sug6uxay')
   // const bf1 = Buffer.from('address1k0m8ucnqug974maa6g36zw7g2wvfd4sug6uxay', 'ascii')
   // logger.info(buf2hex(originAddr))
   // logger.info(stringToHex(originAddr))
 
-  const msg = signMsg({
-    account,
-    tx: [{
-      to: 'address1eep59h9ez4thymept8nxl0padlrc6r78fsjmp3',
-      qos: 2,
-      qscs: [{
-        amount: 3,
-        coin_name: 'QSC'
-      },
-      {
-        amount: 3,
-        coin_name: 'AOE'
-      }]
-    }],
-    chainid: qweb.config.chainId,
-    maxGas: 20000,
-    nonce: 1
-  })
-
-  logger.info(msg.join(' '))
+  // const msg = signMsg({
+  //   account,
+  //   tx: [{
+  //     to: 'address1eep59h9ez4thymept8nxl0padlrc6r78fsjmp3',
+  //     qos: 2,
+  //     qscs: [{
+  //       amount: 3,
+  //       coin_name: 'QSC'
+  //     },
+  //     {
+  //       amount: 3,
+  //       coin_name: 'AOE'
+  //     }]
+  //   }],
+  //   chainid: qweb.config.chainId,
+  //   maxGas: 20000,
+  //   nonce: 1
+  // })
+  // const signatureBase64 = encodeBase64(msg)
+  // logger.info(msg.join(' '))
+  // logger.debug(signatureBase64)
 
   t.pass()
 })

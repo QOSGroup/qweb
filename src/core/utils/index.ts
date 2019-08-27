@@ -1,4 +1,6 @@
 import { Int64BE } from 'int64-buffer'
+import { decodeBase64 as dcbase64 ,encodeBase64 as ecbase64 } from 'tweetnacl-util'
+
 
 /**
  * 是否合法数据
@@ -27,4 +29,12 @@ export function buf2hex(buffer) {
 
 export function stringToBuffer(val: string, encoding: BufferEncoding = 'ascii') {
   return Buffer.from(val, encoding)
+}
+
+export function encodeBase64(val: any) {
+  return ecbase64(val)
+}
+
+export function decodeBase64(val: any) {
+  return dcbase64(val)
 }

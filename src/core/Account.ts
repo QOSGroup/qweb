@@ -3,6 +3,8 @@ import Qweb from './qweb'
 import { IKeyPair, IUserTx } from './types/common';
 import { IAuthTx, IPubkey, IQSC, ISigature, ITrader } from './types/tx'
 import { isNotEmpty } from './utils';
+import { signMsg } from './utils/business';
+import logger from './utils/log';
 
 // tslint:disable-next-line: max-classes-per-file
 class Account {
@@ -27,19 +29,32 @@ class Account {
     }
   }
 
-  public async setTx(tx: IUserTx | IUserTx[]) {
-    return new Promise((resolve: any, _reject: any) => {
+  public sendTx(tx: IUserTx | IUserTx[]) {
+    return this.setTx(tx)
+  }
 
-      resolve(this.makeAuthTx(tx))
+  private async setTx(tx: IUserTx | IUserTx[]) {
+    return new Promise((resolve: any, _reject: any) => {
+      const signingMsg = {
+        account: this,
+        tx,
+        chainid: this.qweb.config.chainId,
+        maxGas: 20000,
+        nonce: 1
+      }
+      const msg = signMsg(signingMsg)
+      logger.debug('msg: ', msg.join(' '))
+      const signatureBase64 = encodeBase64(msg)
+      resolve(this.makeAuthTx({ tx, signatureBase64, maxGas: signingMsg.maxGas, nonce: signingMsg.nonce }))
     })
   }
 
-  public reset() {
-    this.qos = 0
-    this.qscs = []
-  }
+  // private reset() {
+  //   this.qos = 0
+  //   this.qscs = []
+  // }
 
-  private makeAuthTx(tx: IUserTx | IUserTx[]) {
+  private makeAuthTx({ tx, signatureBase64, maxGas, nonce }: { tx: IUserTx | IUserTx[], signatureBase64: string, maxGas: number, nonce: number }) {
     const receivers: ITrader[] = this.makeReceivers(tx)
     if (Array.isArray(tx)) {
       for (const item of (tx as IUserTx[])) {
@@ -64,8 +79,8 @@ class Account {
 
     const sigature: ISigature = {
       pubkey,
-      signature: '',
-      nonce: '1'
+      signature: signatureBase64,
+      nonce: nonce.toString()
     }
 
     // tslint:disable-next-line: no-console
@@ -82,7 +97,7 @@ class Account {
         },
         sigature: [sigature],
         chainid: this.qweb.config.chainId,
-        maxgas: 0
+        maxgas: maxGas
       }
     }
     return authTx
