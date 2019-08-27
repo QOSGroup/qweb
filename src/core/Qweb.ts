@@ -1,3 +1,5 @@
+import nacl from 'tweetnacl'
+import { decodeBase64 } from 'tweetnacl-util'
 import Account from './Account'
 import SecretKey from './SecretKey'
 import createAxioRequest from './utils/request'
@@ -24,6 +26,16 @@ class Qweb {
   public newAccount(mnemonic: string) {
     const keyPair = this.key.genarateKeyPair(mnemonic)
 
+    return new Account(this, keyPair, mnemonic)
+  }
+
+  /**
+	  * 根据私钥恢复账户
+	  * @param {string} privateKey 私钥
+	  */
+  public recoveryAccountByPrivateKey(privateKey) {
+    const privateKeyBuffer = decodeBase64(privateKey)
+    const keyPair = nacl.sign.keyPair.fromSecretKey(privateKeyBuffer)
     return new Account(this, keyPair)
   }
 

@@ -26,7 +26,7 @@
     // Immutability rules
     "readonly-keyword": false,
     "readonly-array": false,
-    "no-let": true,
+    "no-let": false,
     "no-object-mutation": false,
     "no-delete": true,
     "no-method-signature": true,

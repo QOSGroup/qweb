@@ -1,53 +1,29 @@
 import { encodeBase64 } from 'tweetnacl-util'
 import Qweb from './qweb'
-import { IAuthTx, IPubkey, IQSC, ISigature, ITrader } from './types/types';
+import { IKeyPair, IUserTx } from './types/common';
+import { IAuthTx, IPubkey, IQSC, ISigature, ITrader } from './types/tx'
 import { isNotEmpty } from './utils';
 
-/**
- * 用户交易
- */
-export interface IUserTx {
-  /**
-   * 接收方地址
-   */
-  to: string,
-  /**
-   * QOS 数量
-   */
-  qos: number,
-  /**
-   * QSC对象数组
-   */
-  qscs?: IQSC[]
-}
-
-export interface IKeyPair {
-  publicKey: Uint8Array;
-  secretKey: Uint8Array;
-}
-
-export interface IAccount {
-  addr: string;
-  keypair: IKeyPair;
-  pubKey: string;
-  privateKey: string;
-}
-
+// tslint:disable-next-line: max-classes-per-file
 class Account {
   public readonly qweb: Qweb
-  public account: IAccount
+  // public account: IAccount
   public qos: number = 0
   public qscs: IQSC[] = []
+  public mnemonic: string
+  public keypair: IKeyPair
+  public address: string
+  public pubKey: string
+  public privateKey: string
 
-  constructor(controller: Qweb, keyPair?: IKeyPair) {
+  constructor(controller: Qweb, keyPair?: IKeyPair, mnemonic?: string) {
     this.qweb = controller
     if (keyPair) {
-      this.account = {
-        addr: this.qweb.key.getAddress(keyPair.publicKey),
-        keypair: keyPair,
-        pubKey: encodeBase64(keyPair.publicKey),
-        privateKey: encodeBase64(keyPair.secretKey)
-      }
+      this.mnemonic = mnemonic
+      this.keypair = keyPair
+      this.address = this.qweb.key.getAddress(keyPair.publicKey)
+      this.pubKey = encodeBase64(keyPair.publicKey)
+      this.privateKey = encodeBase64(keyPair.secretKey)
     }
   }
 
@@ -65,7 +41,6 @@ class Account {
 
   private makeAuthTx(tx: IUserTx | IUserTx[]) {
     const receivers: ITrader[] = this.makeReceivers(tx)
-    const acc = this.account as IAccount
     if (Array.isArray(tx)) {
       for (const item of (tx as IUserTx[])) {
         this.qos += item.qos
@@ -77,14 +52,14 @@ class Account {
     }
 
     const senders: ITrader[] = [{
-      addr: acc.addr,
+      addr: this.address,
       qos: this.qos,
       qscs: this.qscs.length > 0 ? this.qscs : null
     }]
 
     const pubkey: IPubkey = {
       type: 'tendermint/PubKeyEd25519',
-      value: acc.pubKey
+      value: this.pubKey
     }
 
     const sigature: ISigature = {
@@ -94,7 +69,7 @@ class Account {
     }
 
     // tslint:disable-next-line: no-console
-    console.log('acc.pubKey', JSON.stringify(acc.pubKey))
+    console.log('acc.pubKey', JSON.stringify(this.pubKey))
     const authTx: IAuthTx = {
       type: 'qbase/txs/stdtx',
       value: {
