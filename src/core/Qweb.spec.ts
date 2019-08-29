@@ -21,11 +21,10 @@ test('init Qweb', async t => {
   logger.log('account.address: ', account.address)
   logger.log('account.privateKey: ', account.privateKey)
 
-  // const acc = new Account(qweb, )
-
-  const tx = await account.sendTx([{
+  // const tx =
+  await account.sendTx([{
     to: 'address1eep59h9ez4thymept8nxl0padlrc6r78fsjmp3',
-    qos: 2,
+    qos: 100,
     qscs: [{
       amount: 3,
       coin_name: 'QSC'
@@ -36,7 +35,10 @@ test('init Qweb', async t => {
     }]
   }])
 
-  logger.info(JSON.stringify(tx))
+  // logger.info(JSON.stringify(tx))
+
+
+  t.is(qweb.config.chainId, 'qweb.config.chainId')
 
   // const marshaled = marshalTx(tx)
 
@@ -74,11 +76,3 @@ test('init Qweb', async t => {
 
 
 
-// function stringToHex(str) {
-//   let val = ''
-//   // tslint:disable-next-line: no-let
-//   for (let i = 0; i < str.length; i++) {
-//     val += str.charCodeAt(i).toString(16)
-//   }
-//   return val
-// }

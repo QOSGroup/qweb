@@ -42,10 +42,10 @@ class Account {
         maxGas: 20000,
         nonce: 1
       }
-      const msg = signMsg(signingMsg)
-      logger.debug('msg: ', msg.join(' '))
-      const signatureBase64 = encodeBase64(msg)
-      resolve(this.makeAuthTx({ tx, signatureBase64, maxGas: signingMsg.maxGas, nonce: signingMsg.nonce }))
+      const sigature = signMsg(signingMsg)
+      logger.debug('sigature: ', sigature.join(' '))
+      // const signatureBase64 = encodeBase64(sigature)
+      resolve(this.makeAuthTx({ tx, sigaturearr: sigature, maxGas: signingMsg.maxGas, nonce: signingMsg.nonce }))
     })
   }
 
@@ -54,7 +54,7 @@ class Account {
   //   this.qscs = []
   // }
 
-  private makeAuthTx({ tx, signatureBase64, maxGas, nonce }: { tx: IUserTx | IUserTx[], signatureBase64: string, maxGas: number, nonce: number }) {
+  private makeAuthTx({ tx, sigaturearr, maxGas, nonce }: { tx: IUserTx | IUserTx[], sigaturearr: Uint8Array, maxGas: number, nonce: number }) {
     const receivers: ITrader[] = this.makeReceivers(tx)
     if (Array.isArray(tx)) {
       for (const item of (tx as IUserTx[])) {
@@ -79,12 +79,12 @@ class Account {
 
     const sigature: ISigature = {
       pubkey,
-      signature: signatureBase64,
+      signature: encodeBase64(sigaturearr),
       nonce: nonce.toString()
     }
 
     // tslint:disable-next-line: no-console
-    console.log('acc.pubKey', JSON.stringify(this.pubKey))
+    // console.log('acc.pubKey', JSON.stringify(this.pubKey))
     const authTx: IAuthTx = {
       type: 'qbase/txs/stdtx',
       value: {

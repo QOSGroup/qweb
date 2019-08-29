@@ -1,5 +1,5 @@
 import { Int64BE } from 'int64-buffer'
-import { decodeBase64 as dcbase64 ,encodeBase64 as ecbase64 } from 'tweetnacl-util'
+import { decodeBase64 as dcbase64, encodeBase64 as ecbase64 } from 'tweetnacl-util'
 
 
 /**
@@ -37,4 +37,13 @@ export function encodeBase64(val: any) {
 
 export function decodeBase64(val: any) {
   return dcbase64(val)
+}
+
+export function stringToHex(str: string) {
+  let val = ''
+  // tslint:disable-next-line: no-let
+  for (let i = 0; i < str.length; i++) {
+    val += str.charCodeAt(i).toString(16)
+  }
+  return val
 }

@@ -1,10 +1,12 @@
 import bech32 from 'bech32'
 import { Int64BE } from 'int64-buffer'
+import { Codec, FieldOptions } from 'js-amino'
 import nacl from 'tweetnacl'
-import { Int64ToBuffer, stringToBuffer } from '.';
-import Account from '../Account';
+import { Int64ToBuffer, stringToBuffer } from '.'
+import Account from '../Account'
 import { IUserTx } from '../types/common'
-import logger from './log';
+import { MsgMultiSend, PubKeyEd25519, QSC, Receiver, Sender, Signature, StdTx } from '../types/qos'
+import logger from './log'
 
 export function getOriginAddress(address: string) {
   const addrDecode = bech32.decode(address)
@@ -20,10 +22,32 @@ export function signMsg(
     maxGas: number,
     nonce: number
   }) {
-  const signedMsg = makeSignMsg(oMsg)
+  const codec = registerCodec()
+  const msg = makeSignMsg(oMsg)
   logger.debug('signedMsg: ')
-  logger.debug(signedMsg.join(' '))
-  const signatureData = nacl.sign.detached(Buffer.from(signedMsg), oMsg.account.keypair.secretKey)
+  logger.debug(msg.signedMsg.join(' '))
+  const signatureData = nacl.sign.detached(Buffer.from(msg.signedMsg), oMsg.account.keypair.secretKey)
+
+  const pubKey = new PubKeyEd25519([...oMsg.account.keypair.publicKey])
+  const sig = new Signature(pubKey, [...signatureData], oMsg.nonce.toString())
+
+  const sendMultiMsg = new MsgMultiSend(msg.senders, msg.receivers)
+
+  const stdtx = new StdTx(sendMultiMsg, [sig], oMsg.chainid, oMsg.maxGas.toString())
+  const jsonTx = codec.marshalJson(stdtx)
+  logger.debug('stdtx: ')
+  logger.info(jsonTx)
+  logger.log(FieldOptions)
+  const binary = codec.marshalBinary(stdtx)
+  logger.debug(binary.toString())
+
+
+  // const decodedDataTx = new StdTx();
+  
+  // codec.unMarshalBinary(binary, decodedDataTx)
+
+  // logger.debug('unMb: ')
+  // logger.info(JSON.stringify(decodedDataTx.JsObject()))
 
   return signatureData
 }
@@ -38,15 +62,19 @@ function makeSignMsg({ account, tx, chainid, maxGas, nonce }
   }) {
   let arrMsg: any[] = []
   // push buffer of orginaddress
-  arrMsg = arrMsg.concat(getOriginAddress(account.address))
+  const fromAddress = getOriginAddress(account.address)
+  arrMsg = arrMsg.concat(fromAddress)
 
   const allData = composeData(tx)
   // concat buffer of qosAmount
-  arrMsg = arrMsg.concat([...allData.qosAmount.toBuffer()])
+  arrMsg = arrMsg.concat([...stringToBuffer(allData.qosAmount.toString())])
   // concat buffer of qscAmount
   const qscArray: string[] = []
+
+  const qscArr: any[] = []
   for (const qsc of allData.qscAmountArr) {
     qscArray.push(`${qsc.amount}${qsc.coinName}`)
+    qscArr.push(new QSC(qsc.coinName, qsc.amount.toString()))
   }
 
   // compose qsc string , e.g. 2qsca,3qscb
@@ -54,20 +82,30 @@ function makeSignMsg({ account, tx, chainid, maxGas, nonce }
   arrMsg = arrMsg.concat([...stringToBuffer(qscString)])
 
   arrMsg = arrMsg.concat([...allData.arrReceiver])
-  
+
   const chaidBufferArray = [...stringToBuffer(chainid)]
   arrMsg = arrMsg.concat(chaidBufferArray)
   arrMsg = arrMsg.concat([...Int64ToBuffer(maxGas)])
   arrMsg = arrMsg.concat([...Int64ToBuffer(nonce)])
   arrMsg = arrMsg.concat(chaidBufferArray)
 
-  return arrMsg
+  const senders = [new Sender(fromAddress, allData.qosAmount.toString(), qscArr)]
+  const receivers = allData.receivers
+
+  return { signedMsg: arrMsg, senders, receivers }
+}
+
+function registerCodec() {
+  const codec = new Codec();
+  codec.registerConcrete(new StdTx(), 'qbase/txs/stdtx', {});
+  codec.registerConcrete(new MsgMultiSend(), 'transfer/txs/TxTransfer', {});
+  codec.registerConcrete(new PubKeyEd25519(), 'tendermint/PubKeyEd25519', {});
+  return codec
 }
 
 function composeData(tx: IUserTx | IUserTx[]) {
 
   const coinNameArr = getQscCoinNames(tx)
-  logger.debug(coinNameArr)
 
   if (Array.isArray(tx)) {
     return txIsArrayForComposeData(tx, coinNameArr)
@@ -81,11 +119,15 @@ function txIsArrayForComposeData(tx: IUserTx[], coinNameArr: string[]) {
   // 添加 receiver 代签名 byte[]
   let arrReceiver: any[] = []
 
+  const receivers: any[] = []
+
   for (const item of tx) {
     qosAmount += item.qos
-    arrReceiver = arrReceiver.concat(getOriginAddress(item.to))
-    arrReceiver = arrReceiver.concat([...Int64ToBuffer(item.qos)])
+    const toAddress = getOriginAddress(item.to)
+    arrReceiver = arrReceiver.concat(toAddress)
+    arrReceiver = arrReceiver.concat([...stringToBuffer(item.qos.toString())])
 
+    const qscArr: any[] = []
     const cqscAmountArr: string[] = []
     if (item.qscs && item.qscs.length > 0) {
       for (const coinName of coinNameArr) {
@@ -96,8 +138,8 @@ function txIsArrayForComposeData(tx: IUserTx[], coinNameArr: string[]) {
           }
         })
         cqscAmountArr.push(`${cqsc.amount}${coinName}`)
+        qscArr.push(new QSC(coinName, cqsc.amount.toString()))
         const index = qscAmountArr.findIndex(x => x.coinName === coinName)
-        logger.debug('index: ', index, coinName)
         if (index > -1) {
           qscAmountArr[index].amount += cqsc.amount
         } else {
@@ -108,12 +150,14 @@ function txIsArrayForComposeData(tx: IUserTx[], coinNameArr: string[]) {
         }
       }
       arrReceiver = arrReceiver.concat([...stringToBuffer(cqscAmountArr.join(','))])
+      receivers.push(new Receiver(toAddress, item.qos.toString(), qscArr))
     }
   }
   return {
     qosAmount: new Int64BE(qosAmount),
     qscAmountArr,
-    arrReceiver
+    arrReceiver,
+    receivers
   }
 }
 
@@ -122,9 +166,14 @@ function txForComposeData(tx: IUserTx, coinNameArr: string[]) {
   const qscAmountArr: any[] = []
   // 添加 receiver 代签名 byte[]
   let arrReceiver: any[] = []
+
+  const qscArr: any[] = []
+
   qosAmount = tx.qos
-  arrReceiver = arrReceiver.concat(getOriginAddress(tx.to))
-  arrReceiver = arrReceiver.concat([...Int64ToBuffer(tx.qos)])
+  const toAddress = getOriginAddress(tx.to)
+  arrReceiver = arrReceiver.concat(toAddress)
+
+  arrReceiver = arrReceiver.concat([...stringToBuffer(tx.qos.toString())])
   const cqscAmountArr: string[] = []
   if (tx.qscs && tx.qscs.length > 0) {
     for (const coinName of coinNameArr) {
@@ -139,13 +188,18 @@ function txForComposeData(tx: IUserTx, coinNameArr: string[]) {
         coinName,
         amount: cqsc.amount
       })
+      qscArr.push(new QSC(coinName, cqsc.amount.toString()))
     }
     arrReceiver = arrReceiver.concat([...stringToBuffer(cqscAmountArr.join(','))])
   }
+
+  const receivers = [new Receiver(toAddress, tx.qos.toString(), qscAmountArr)]
+
   return {
     qosAmount: new Int64BE(qosAmount),
     qscAmountArr,
-    arrReceiver
+    arrReceiver,
+    receivers
   }
 }
 
