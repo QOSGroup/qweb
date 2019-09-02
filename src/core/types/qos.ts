@@ -1,5 +1,7 @@
 import { TypeFactory, Types } from 'js-amino'
 
+export const qosDecimal = 10000
+
 export const StdTx = TypeFactory.create('StdTx', [
 	{
 		name: 'itx',

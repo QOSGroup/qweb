@@ -1,11 +1,11 @@
 import bech32 from 'bech32'
 import { Int64BE } from 'int64-buffer'
-import { Codec, FieldOptions } from 'js-amino'
+import { Codec } from 'js-amino'
 import nacl from 'tweetnacl'
-import { Int64ToBuffer, stringToBuffer } from '.'
+import { accMul, Int64ToBuffer, stringToBuffer } from '.'
 import Account from '../Account'
 import { IUserTx } from '../types/common'
-import { MsgMultiSend, PubKeyEd25519, QSC, Receiver, Sender, Signature, StdTx } from '../types/qos'
+import { MsgMultiSend, PubKeyEd25519, qosDecimal, QSC, Receiver, Sender, Signature, StdTx } from '../types/qos'
 import logger from './log'
 
 export function getOriginAddress(address: string) {
@@ -14,7 +14,7 @@ export function getOriginAddress(address: string) {
   return fromwords
 }
 
-export function signMsg(
+export function signTxMsg(
   oMsg: {
     account: Account,
     tx: IUserTx | IUserTx[],
@@ -23,9 +23,7 @@ export function signMsg(
     nonce: number
   }) {
   const codec = registerCodec()
-  const msg = makeSignMsg(oMsg)
-  logger.debug('signedMsg: ')
-  logger.debug(msg.signedMsg.join(' '))
+  const msg = makeTxSignMsg(oMsg)
   const signatureData = nacl.sign.detached(Buffer.from(msg.signedMsg), oMsg.account.keypair.secretKey)
 
   const pubKey = new PubKeyEd25519([...oMsg.account.keypair.publicKey])
@@ -37,22 +35,19 @@ export function signMsg(
   const jsonTx = codec.marshalJson(stdtx)
   logger.debug('stdtx: ')
   logger.info(jsonTx)
-  logger.log(FieldOptions)
+  logger.debug('marshalBinary: ')
   const binary = codec.marshalBinary(stdtx)
   logger.debug(binary.toString())
 
-
   // const decodedDataTx = new StdTx();
-  
   // codec.unMarshalBinary(binary, decodedDataTx)
+  // logger.debug('unMb StdTx: ')
+  // logger.info(decodedDataTx.JsObject())
 
-  // logger.debug('unMb: ')
-  // logger.info(JSON.stringify(decodedDataTx.JsObject()))
-
-  return signatureData
+  return binary
 }
 
-function makeSignMsg({ account, tx, chainid, maxGas, nonce }
+function makeTxSignMsg({ account, tx, chainid, maxGas, nonce }
   : {
     account: Account,
     tx: IUserTx | IUserTx[],
@@ -122,6 +117,7 @@ function txIsArrayForComposeData(tx: IUserTx[], coinNameArr: string[]) {
   const receivers: any[] = []
 
   for (const item of tx) {
+    item.qos = accMul(item.qos, qosDecimal)
     qosAmount += item.qos
     const toAddress = getOriginAddress(item.to)
     arrReceiver = arrReceiver.concat(toAddress)
@@ -134,9 +130,10 @@ function txIsArrayForComposeData(tx: IUserTx[], coinNameArr: string[]) {
         const cqsc = item.qscs.filter(x => x.coin_name.toLowerCase() === coinName).reduce((pre, current) => {
           return {
             coin_name: pre.coin_name,
-            amount: pre.amount + current.amount
+            amount: pre.amount  + current.amount
           }
         })
+        cqsc.amount = accMul(cqsc.amount, qosDecimal)
         cqscAmountArr.push(`${cqsc.amount}${coinName}`)
         qscArr.push(new QSC(coinName, cqsc.amount.toString()))
         const index = qscAmountArr.findIndex(x => x.coinName === coinName)
@@ -150,8 +147,8 @@ function txIsArrayForComposeData(tx: IUserTx[], coinNameArr: string[]) {
         }
       }
       arrReceiver = arrReceiver.concat([...stringToBuffer(cqscAmountArr.join(','))])
-      receivers.push(new Receiver(toAddress, item.qos.toString(), qscArr))
     }
+    receivers.push(new Receiver(toAddress, item.qos.toString(), qscArr))
   }
   return {
     qosAmount: new Int64BE(qosAmount),
@@ -169,7 +166,7 @@ function txForComposeData(tx: IUserTx, coinNameArr: string[]) {
 
   const qscArr: any[] = []
 
-  qosAmount = tx.qos
+  qosAmount = accMul(tx.qos, qosDecimal) 
   const toAddress = getOriginAddress(tx.to)
   arrReceiver = arrReceiver.concat(toAddress)
 
@@ -180,9 +177,10 @@ function txForComposeData(tx: IUserTx, coinNameArr: string[]) {
       const cqsc = tx.qscs.filter(x => x.coin_name.toLowerCase() === coinName).reduce((pre, current) => {
         return {
           coin_name: pre.coin_name,
-          amount: pre.amount + current.amount
+          amount: pre.amount  + current.amount
         }
       })
+      cqsc.amount = accMul(cqsc.amount, qosDecimal)
       cqscAmountArr.push(`${cqsc.amount}${coinName}`)
       qscAmountArr.push({
         coinName,

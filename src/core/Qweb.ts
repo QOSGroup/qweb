@@ -1,3 +1,4 @@
+import { RpcClient } from 'tendermint'
 import nacl from 'tweetnacl'
 import Account from './Account'
 import SecretKey from './SecretKey'
@@ -10,6 +11,8 @@ class Qweb {
     readonly baseUrl: string
   };
   public key: SecretKey;
+  public rpc: any;
+  public node: any;
 
   constructor(config: {
     readonly chainId: string,
@@ -17,6 +20,8 @@ class Qweb {
   }) {
     this.config = config
     this.key = new SecretKey()
+    // this.node = Tendermint(config.baseUrl)
+    this.rpc = RpcClient(config.baseUrl)
   }
 
   public get request() {

@@ -4,7 +4,7 @@ import Qweb from './Qweb'
 import logger from './utils/log'
 
 test('init Qweb', async t => {
-  const qweb = new Qweb({ chainId: 'qweb.config.chainId', baseUrl: 'baseUrl' })
+  const qweb = new Qweb({ chainId: 'aquarius-1000', baseUrl: 'ws://47.103.78.91:26657' })
 
   t.log(qweb)
 
@@ -25,20 +25,21 @@ test('init Qweb', async t => {
   await account.sendTx([{
     to: 'address1eep59h9ez4thymept8nxl0padlrc6r78fsjmp3',
     qos: 100,
-    qscs: [{
-      amount: 3,
-      coin_name: 'QSC'
-    },
-    {
-      amount: 3,
-      coin_name: 'AOE'
-    }]
+    // qscs: [{
+    //   amount: 3,
+    //   coin_name: 'QSC'
+    // },
+    // {
+    //   amount: 3,
+    //   coin_name: 'AOE'
+    // }]
   }])
+  // await account.getNonce()
 
   // logger.info(JSON.stringify(tx))
 
 
-  t.is(qweb.config.chainId, 'qweb.config.chainId')
+  t.is(qweb.config.chainId, 'aquarius-1000')
 
   // const marshaled = marshalTx(tx)
 
