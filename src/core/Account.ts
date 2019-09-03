@@ -1,8 +1,8 @@
 import { encodeBase64 } from 'tweetnacl-util'
 import Qweb from './qweb'
-import { IKeyPair, IUserTx } from './types/common'
-import { IQSC } from './types/tx'
-import { signTxMsg } from './utils/business'
+import { IDelegatorTx, IKeyPair, IQSC, IUserTx } from './types/common'
+import { signDelegatorTxMsg } from './utils/DelegatorSignData';
+import { signTxMsg } from './utils/TxSignData'
 
 class Account {
   public readonly qweb: Qweb
@@ -26,157 +26,67 @@ class Account {
     }
   }
 
-  public async getNonce() {
-    // const path = '/store/acc/key'
-    // const key = getOriginAddress(this.address)
-    // logger.debug('account:', `account:[${key}]`)
-    // const accountBuffer = stringToBuffer('account:')
-    // const res = await this.qweb.rpc.abciQuery({ path, data: buf2hex([...accountBuffer, ...key]) }, { height: 0, prove: false })
-
-    // logger.debug('account:', `account:[${key}]`)
-    // const resValue = res.response.value
-    // const codec = new Codec()
-    // codec.registerConcrete(new QOSAccount(), 'qos/types/QOSAccount', {});
-    // codec.registerConcrete(new BaseAccount(), 'qbase/account/BaseAccount', {});
-    // codec.registerConcrete(new PubKeyEd25519(), 'tendermint/PubKeyEd25519', {});
-    // codec.registerConcrete([new QSC()], 'qscs');
-    // codec.registerConcrete(new QSC(), 'qsc');
-    // const baseAccount = new BaseAccount([...key], new PubKeyEd25519([...this.keypair.publicKey]), 0)
-    // const account = new QOSAccount(
-    //   baseAccount,
-    //   '501000000000',
-    //   [
-    //     // new QSC('','')
-    //   ]
-    // )
-    // logger.debug('marshalJson: ')
-    // const json = codec.marshalJson(account)
-
+  public async getAccount() {
+    const result = await this.qweb.request({
+      url: `nodes/${this.qweb.config.chainId}/accounts/${this.address}`
+    })
+    if (!result || !result.data) {
+      throw new Error('network request error: ' + JSON.stringify(result))
+    }
+    return result.data.result.value
   }
 
   public async sendTx(tx: IUserTx | IUserTx[], maxGas = 200000) {
-    const txBinary = await this.setTx(tx, maxGas)
+    const acc = await this.getAccount()
+    // logger.info('acc:', acc)
+    const txBinary = await this.setTx(tx, Number(acc.base_account.nonce) + 1, maxGas)
     // logger.log('log rpc block:')
     // const res = await this.qweb.rpc.block({ height: 100 })
     // logger.debug(res)
-    // const res = await this.qweb.rpc.broadcastTxSync({tx: txBinary})
+    const res = await this.qweb.rpc.broadcastTxSync({ tx: txBinary })
     // logger.debug(res)
-    await this.getNonce()
-    return txBinary
+    return res
   }
 
-  private async setTx(tx: IUserTx | IUserTx[], maxGas = 200000) {
+
+  public async sendDelegatorTx(tx: IDelegatorTx, maxGas = 2000000) {
+    const acc = await this.getAccount()
+    // logger.info('acc:', acc)
+    const txBinary = await this.setDelegatorTx(tx, Number(acc.base_account.nonce) + 1, maxGas)
+    // logger.debug('delegator txBinary:')
+    // logger.info(JSON.stringify(txBinary))
+    const res = await this.qweb.rpc.broadcastTxSync({ tx: txBinary })
+    // logger.debug(res)
+    return res
+  }
+
+  public async setDelegatorTx(tx: IDelegatorTx, nonce: number, maxGas = 200000) {
     return new Promise((resolve: any, _reject: any) => {
       const signingMsg = {
         account: this,
         tx,
         chainid: this.qweb.config.chainId,
         maxGas,
-        nonce: 1
+        nonce
       }
 
-      resolve(signTxMsg(signingMsg))
-      // const signatureBase64 = encodeBase64(sigature)
-      // resolve(this.makeAuthTx({ tx, sigaturearr: sig.signatureData, maxGas: signingMsg.maxGas, nonce: signingMsg.nonce }))
+      resolve(signDelegatorTxMsg(signingMsg))
     })
   }
 
-  // private reset() {
-  //   this.qos = 0
-  //   this.qscs = []
-  // }
+  private async setTx(tx: IUserTx | IUserTx[], nonce: number, maxGas = 200000) {
+    return new Promise((resolve: any, _reject: any) => {
+      const signingMsg = {
+        account: this,
+        tx,
+        chainid: this.qweb.config.chainId,
+        maxGas,
+        nonce
+      }
 
-  // private makeAuthTx({ tx, sigaturearr, maxGas, nonce }: { tx: IUserTx | IUserTx[], sigaturearr: Uint8Array, maxGas: number, nonce: number }) {
-  //   const receivers: ITrader[] = this.makeReceivers(tx)
-  //   if (Array.isArray(tx)) {
-  //     for (const item of (tx as IUserTx[])) {
-  //       this.qos += item.qos
-  //       this.makeSenderQSCs(item)
-  //     }
-  //   } else {
-  //     this.qos = tx.qos
-  //     this.makeSenderQSCs(tx)
-  //   }
-
-  //   const senders: ITrader[] = [{
-  //     addr: this.address,
-  //     qos: this.qos,
-  //     qscs: this.qscs.length > 0 ? this.qscs : null
-  //   }]
-
-  //   const pubkey: IPubkey = {
-  //     type: 'tendermint/PubKeyEd25519',
-  //     value: this.pubKey
-  //   }
-
-  //   const sigature: ISigature = {
-  //     pubkey,
-  //     signature: encodeBase64(sigaturearr),
-  //     nonce: nonce.toString()
-  //   }
-
-  //   // tslint:disable-next-line: no-console
-  //   // console.log('acc.pubKey', JSON.stringify(this.pubKey))
-  //   const authTx: IAuthTx = {
-  //     type: 'qbase/txs/stdtx',
-  //     value: {
-  //       itx: {
-  //         type: 'transfer/txs/TxTransfer',
-  //         value: {
-  //           senders,
-  //           receivers
-  //         }
-  //       },
-  //       sigature: [sigature],
-  //       chainid: this.qweb.config.chainId,
-  //       maxgas: maxGas
-  //     }
-  //   }
-  //   return authTx
-  // }
-
-  // private makeSenderQSCs(receiver: IUserTx) {
-  //   if (!isNotEmpty(receiver.qscs)) {
-  //     return
-  //   }
-  //   for (const item of receiver.qscs) {
-  //     const sameQsc = this.qscs.find(x => x.coin_name === item.coin_name)
-  //     if (isNotEmpty(sameQsc)) {
-  //       sameQsc.amount + item.amount
-  //       continue
-  //     }
-  //     this.qscs.push(item)
-  //   }
-  // }
-
-  // private makeReceivers(tx: IUserTx | IUserTx[]) {
-  //   const txIsArray = Array.isArray(tx)
-  //   if (!txIsArray) {
-  //     return [this.makeReceiver(tx as IUserTx)]
-  //   }
-  //   const receivers: ITrader[] = []
-  //   for (const item of (tx as IUserTx[])) {
-  //     receivers.push(this.makeReceiver(item))
-  //   }
-  //   return receivers
-  // }
-
-  // private makeReceiver(tx: IUserTx) {
-  //   const qscs: IQSC[] = []
-  //   if (isNotEmpty(tx.qscs)) {
-  //     for (const qsc of tx.qscs) {
-  //       qscs.push(qsc)
-  //     }
-  //   }
-
-  //   const receiver: ITrader = {
-  //     addr: tx.to,
-  //     qos: tx.qos,
-  //     qscs: qscs.length > 0 ? qscs : null
-  //   }
-
-  //   return receiver
-  // }
+      resolve(signTxMsg(signingMsg))
+    })
+  }
 }
 
 export default Account

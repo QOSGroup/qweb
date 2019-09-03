@@ -13,19 +13,21 @@ class Qweb {
   public key: SecretKey;
   public rpc: any;
   public node: any;
+  public qmoonUrl: string;
 
   constructor(config: {
     readonly chainId: string,
     readonly baseUrl: string
   }) {
     this.config = config
+    this.qmoonUrl = 'http://qmoonapi.qoschain.info'
     this.key = new SecretKey()
     // this.node = Tendermint(config.baseUrl)
     this.rpc = RpcClient(config.baseUrl)
   }
 
   public get request() {
-    return createAxioRequest(this.config.baseUrl)
+    return createAxioRequest(this.qmoonUrl)
   }
 
   public newAccount(mnemonic: string) {

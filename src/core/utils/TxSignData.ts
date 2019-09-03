@@ -4,8 +4,8 @@ import { Codec } from 'js-amino'
 import nacl from 'tweetnacl'
 import { accMul, Int64ToBuffer, stringToBuffer } from '.'
 import Account from '../Account'
-import { IUserTx } from '../types/common'
-import { MsgMultiSend, PubKeyEd25519, qosDecimal, QSC, Receiver, Sender, Signature, StdTx } from '../types/qos'
+import { IUserTx, qosDecimal } from '../types/common'
+import { MsgMultiSend, PubKeyEd25519, QSC, Receiver, Sender, Signature, StdTx } from '../types/tx'
 import logger from './log'
 
 export function getOriginAddress(address: string) {
@@ -22,20 +22,20 @@ export function signTxMsg(
     maxGas: number,
     nonce: number
   }) {
-  const codec = registerCodec()
   const msg = makeTxSignMsg(oMsg)
   const signatureData = nacl.sign.detached(Buffer.from(msg.signedMsg), oMsg.account.keypair.secretKey)
 
+  const codec = registerCodec()
   const pubKey = new PubKeyEd25519([...oMsg.account.keypair.publicKey])
   const sig = new Signature(pubKey, [...signatureData], oMsg.nonce.toString())
 
   const sendMultiMsg = new MsgMultiSend(msg.senders, msg.receivers)
 
   const stdtx = new StdTx(sendMultiMsg, [sig], oMsg.chainid, oMsg.maxGas.toString())
-  const jsonTx = codec.marshalJson(stdtx)
-  logger.debug('stdtx: ')
-  logger.info(jsonTx)
-  logger.debug('marshalBinary: ')
+  // const jsonTx = codec.marshalJson(stdtx)
+  // logger.debug('stdtx: ')
+  // logger.info(jsonTx)
+  // logger.debug('marshalBinary: ')
   const binary = codec.marshalBinary(stdtx)
   logger.debug(binary.toString())
 
@@ -130,7 +130,7 @@ function txIsArrayForComposeData(tx: IUserTx[], coinNameArr: string[]) {
         const cqsc = item.qscs.filter(x => x.coin_name.toLowerCase() === coinName).reduce((pre, current) => {
           return {
             coin_name: pre.coin_name,
-            amount: pre.amount  + current.amount
+            amount: pre.amount + current.amount
           }
         })
         cqsc.amount = accMul(cqsc.amount, qosDecimal)
@@ -166,7 +166,7 @@ function txForComposeData(tx: IUserTx, coinNameArr: string[]) {
 
   const qscArr: any[] = []
 
-  qosAmount = accMul(tx.qos, qosDecimal) 
+  qosAmount = accMul(tx.qos, qosDecimal)
   const toAddress = getOriginAddress(tx.to)
   arrReceiver = arrReceiver.concat(toAddress)
 
@@ -177,7 +177,7 @@ function txForComposeData(tx: IUserTx, coinNameArr: string[]) {
       const cqsc = tx.qscs.filter(x => x.coin_name.toLowerCase() === coinName).reduce((pre, current) => {
         return {
           coin_name: pre.coin_name,
-          amount: pre.amount  + current.amount
+          amount: pre.amount + current.amount
         }
       })
       cqsc.amount = accMul(cqsc.amount, qosDecimal)

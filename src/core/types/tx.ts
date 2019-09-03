@@ -1,45 +1,93 @@
+import { TypeFactory, Types } from 'js-amino'
 
-/** @TODO document */
-export interface IAuthTx {
-  type: string;
-  value: IStdTx;
-}
+export const StdTx = TypeFactory.create('StdTx', [
+	{
+		name: 'itx',
+		type: Types.Interface
+	},
+	{
+		name: 'sigature',
+		type: Types.ArrayStruct
+	}, {
+		name: 'chainid',
+		type: Types.String
+	},
+	{
+		name: 'maxgas',
+		type: Types.String
+	}
+])
 
-export interface IStdTx {
-  itx: ITx,
-  sigature: ISigature[],
-  chainid: string,
-  maxgas: number
-}
+export const MsgMultiSend = TypeFactory.create('MsgMultiSend', [
+	{
+		name: 'senders',
+		type: Types.ArrayStruct
+	},
+	{
+		name: 'receivers',
+		type: Types.ArrayStruct
+	}
+])
 
-export interface ITx {
-  type: string;
-  value: ITraders
-}
+export const PubKeyEd25519 = TypeFactory.create('PubKeyEd25519', [
+	{
+		name: 's',
+		type: Types.ByteSlice
+	}], Types.ByteSlice
+)
 
-export interface ITraders {
-  senders: ITrader[],
-  receivers: ITrader[]
-}
+export const Sender = TypeFactory.create('Sender', [
+	{
+		name: 'addr',
+		type: Types.String
+	},
+	{
+		name: 'qos',
+		type: Types.String
+	},
+	{
+		name: 'qscs',
+		type: Types.ArrayStruct
+	}
+])
 
-export interface ITrader {
-  addr: string,
-  qos: number,
-  qscs: IQSC[]
-}
+export const Receiver = TypeFactory.create('Receiver', [
+	{
+		name: 'addr',
+		type: Types.String
+	},
+	{
+		name: 'qos',
+		type: Types.String
+	},
+	{
+		name: 'qscs',
+		type: Types.ArrayStruct
+	}
+])
 
-export interface IQSC {
-  coin_name: string,
-  amount: number
-}
+export const QSC = TypeFactory.create('qsc', [
+	{
+		name: 'coin_name',
+		type: Types.String
+	},
+	{
+		name: 'amount',
+		type: Types.String
+	}
+])
 
-export interface ISigature {
-  pubkey: IPubkey,
-  signature: string,
-  nonce: string
-}
-
-export interface IPubkey {
-  type: string,
-  value: string
-}
+export const Signature = TypeFactory.create('signature', [
+	{
+		name: 'pubkey',
+		type: Types.Interface
+	},
+	{
+		name: 'signature',
+		type: Types.ByteSlice
+	},
+	{
+		name: 'nonce',
+		type: Types.Int64
+	}
+])

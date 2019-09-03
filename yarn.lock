@@ -3574,7 +3574,7 @@ istanbul-reports@^2.2.4:
 
 "js-amino@https://github.com/zhangwen9229/Js-Amino.git":
   version "1.0.0"
-  resolved "https://github.com/zhangwen9229/Js-Amino.git#19b8807ac395dc5d1b41d957ed4ea9ad47c1bd79"
+  resolved "https://github.com/zhangwen9229/Js-Amino.git#3f6a9138d7258a6c08752cdd2f330dcc43e6e6d7"
   dependencies:
     int53 "^0.2.4"
     js-sha256 "^0.9.0"

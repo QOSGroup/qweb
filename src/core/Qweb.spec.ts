@@ -21,20 +21,27 @@ test('init Qweb', async t => {
   logger.log('account.address: ', account.address)
   logger.log('account.privateKey: ', account.privateKey)
 
+  // delegator test
+  // await account.sendDelegatorTx({
+  //   to: 'address1nzv9awha9606jp5rpqe2kujckddpyauggu56ru',
+  //   qos: 100,
+  //   isCompound: false
+  // })
+
+  // transfer test
   // const tx =
-  await account.sendTx([{
-    to: 'address1eep59h9ez4thymept8nxl0padlrc6r78fsjmp3',
-    qos: 100,
-    // qscs: [{
-    //   amount: 3,
-    //   coin_name: 'QSC'
-    // },
-    // {
-    //   amount: 3,
-    //   coin_name: 'AOE'
-    // }]
-  }])
-  // await account.getNonce()
+  // await account.sendTx([{
+  //   to: 'address1eep59h9ez4thymept8nxl0padlrc6r78fsjmp3',
+  //   qos: 100,
+  //   // qscs: [{
+  //   //   amount: 3,
+  //   //   coin_name: 'QSC'
+  //   // },
+  //   // {
+  //   //   amount: 3,
+  //   //   coin_name: 'AOE'
+  //   // }]
+  // }])
 
   // logger.info(JSON.stringify(tx))
 
