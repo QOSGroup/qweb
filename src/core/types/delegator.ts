@@ -18,3 +18,22 @@ export const ITX = TypeFactory.create('ITX', [
 		type: Types.Boolean
 	}
 ])
+
+export const UnbondITX = TypeFactory.create('UnbondITX', [
+	{
+		name: 'Delegator',
+		type: Types.String
+  },
+  {
+    name: 'ValidatorOwner',
+    type: Types.String
+  },
+	{
+		name: 'UnbondAmount',
+		type: Types.Int64
+	},
+	{
+		name: 'IsUnbondAll',
+		type: Types.Boolean
+	}
+])

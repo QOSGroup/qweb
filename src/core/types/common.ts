@@ -33,7 +33,7 @@ export interface IKeyPair {
 /**
  * 委托交易
  */
-export interface IDelegatorTx{
+export interface IDelegatorTx {
   /**
    * ValidatorOwner: Validator 地址
    */
@@ -46,4 +46,19 @@ export interface IDelegatorTx{
    * 是否复投
    */
   isCompound: boolean
+}
+
+export interface IUnbondDelegatorTx {
+  /**
+   * ValidatorOwner: Validator 地址
+   */
+  to: string,
+  /**
+   * QOS 数量
+   */
+  qos: number,
+  /**
+   * 是否解绑所以
+   */
+  isUnbondAll: boolean
 }

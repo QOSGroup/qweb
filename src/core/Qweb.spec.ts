@@ -4,7 +4,7 @@ import Qweb from './Qweb'
 import logger from './utils/log'
 
 test('init Qweb', async t => {
-  const qweb = new Qweb({ chainId: 'aquarius-1000', baseUrl: 'ws://47.103.78.91:26657' })
+  const qweb = new Qweb({ chainId: 'aquarius-1001', baseUrl: 'ws://47.103.78.91:26657' })
 
   t.log(qweb)
 
@@ -28,6 +28,12 @@ test('init Qweb', async t => {
   //   isCompound: false
   // })
 
+  // await account.sendUnbondDelegatorTx({
+  //   to: 'address1nzv9awha9606jp5rpqe2kujckddpyauggu56ru',
+  //   qos: 100,
+  //   isUnbondAll: false
+  // })
+
   // transfer test
   // const tx =
   // await account.sendTx([{
@@ -46,7 +52,7 @@ test('init Qweb', async t => {
   // logger.info(JSON.stringify(tx))
 
 
-  t.is(qweb.config.chainId, 'aquarius-1000')
+  t.is(qweb.config.chainId, 'aquarius-1001')
 
   // const marshaled = marshalTx(tx)
 
