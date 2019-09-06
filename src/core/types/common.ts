@@ -62,3 +62,18 @@ export interface IUnbondDelegatorTx {
    */
   isUnbondAll: boolean
 }
+
+export interface IApproveTx {
+  /**
+   * 被预授权人地址
+   */
+  to: string,
+  /**
+   * QOS 数量
+   */
+  qos: number,
+  /**
+   * QSC对象数组
+   */
+  qscs?: IQSC[]
+}

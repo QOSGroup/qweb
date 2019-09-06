@@ -1,6 +1,7 @@
 import { encodeBase64 } from 'tweetnacl-util'
 import Qweb from './qweb'
-import { IDelegatorTx, IKeyPair, IQSC, IUnbondDelegatorTx, IUserTx } from './types/common'
+import { IApproveTx, IDelegatorTx, IKeyPair, IQSC, IUnbondDelegatorTx, IUserTx } from './types/common'
+import { signApproveTxMsg } from './utils/ApproveSignData';
 import { signDelegatorTxMsg, signUnbondDelegatorTxMsg } from './utils/DelegatorSignData';
 import logger from './utils/log';
 import { signTxMsg } from './utils/TxSignData'
@@ -51,10 +52,7 @@ class Account {
 
   public async sendDelegatorTx(tx: IDelegatorTx, maxGas = 2000000) {
     const acc = await this.getAccount()
-    // logger.info('acc:', acc)
     const txBinary = await this.setDelegatorTx(tx, Number(acc.base_account.nonce) + 1, maxGas)
-    // logger.debug('delegator txBinary:')
-    // logger.info(JSON.stringify(txBinary))
     const res = await this.qweb.rpc.broadcastTxSync({ tx: txBinary })
     // logger.debug(res)
     return res
@@ -62,16 +60,21 @@ class Account {
 
   public async sendUnbondDelegatorTx(tx: IUnbondDelegatorTx, maxGas = 2000000) {
     const acc = await this.getAccount()
-    // logger.info('acc:', acc)
     const txBinary = await this.setUnbondDelegatorTx(tx, Number(acc.base_account.nonce) + 1, maxGas)
-    // logger.debug('delegator txBinary:')
-    // logger.info(JSON.stringify(txBinary))
     const res = await this.qweb.rpc.broadcastTxSync({ tx: txBinary })
     logger.debug(res)
     return res
   }
 
-  public async setDelegatorTx(tx: IDelegatorTx, nonce: number, maxGas = 200000) {
+  public async sendApproveTx(tx: IApproveTx, maxGas = 200000) {
+    const acc = await this.getAccount()
+    const txBinary = await this.setApproveTx(tx, Number(acc.base_account.nonce) + 1, maxGas)
+    const res = await this.qweb.rpc.broadcastTxSync({ tx: txBinary })
+    logger.debug(res)
+    return res
+  }
+
+  public async setApproveTx(tx: IApproveTx, nonce: number, maxGas: number) {
     return new Promise((resolve: any, _reject: any) => {
       const signingMsg = {
         account: this,
@@ -80,12 +83,25 @@ class Account {
         maxGas,
         nonce
       }
+      resolve(signApproveTxMsg(signingMsg))
+    })
+  }
 
+
+  public async setDelegatorTx(tx: IDelegatorTx, nonce: number, maxGas: number) {
+    return new Promise((resolve: any, _reject: any) => {
+      const signingMsg = {
+        account: this,
+        tx,
+        chainid: this.qweb.config.chainId,
+        maxGas,
+        nonce
+      }
       resolve(signDelegatorTxMsg(signingMsg))
     })
   }
 
-  public async setUnbondDelegatorTx(tx: IUnbondDelegatorTx, nonce: number, maxGas = 200000) {
+  public async setUnbondDelegatorTx(tx: IUnbondDelegatorTx, nonce: number, maxGas: number) {
     return new Promise((resolve: any, _reject: any) => {
       const signingMsg = {
         account: this,
@@ -94,12 +110,11 @@ class Account {
         maxGas,
         nonce
       }
-
       resolve(signUnbondDelegatorTxMsg(signingMsg))
     })
   }
 
-  private async setTx(tx: IUserTx | IUserTx[], nonce: number, maxGas = 200000) {
+  private async setTx(tx: IUserTx | IUserTx[], nonce: number, maxGas: number) {
     return new Promise((resolve: any, _reject: any) => {
       const signingMsg = {
         account: this,

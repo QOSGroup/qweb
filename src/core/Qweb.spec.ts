@@ -34,6 +34,13 @@ test('init Qweb', async t => {
   //   isUnbondAll: false
   // })
 
+  await account.sendApproveTx({
+    to: 'address1v26ael2jh0q7aetuk45yqf3jcyyywg2g6wq2tv',
+    qos: 100,
+    // qscs: false
+  })
+
+
   // transfer test
   // const tx =
   // await account.sendTx([{
