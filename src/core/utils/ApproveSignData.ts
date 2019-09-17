@@ -5,7 +5,6 @@ import Account from '../Account'
 import { Approve, ApproveITX } from '../types/approve'
 import { IApproveTx, qosDecimal } from '../types/common'
 import { PubKeyEd25519, QSC, Signature, StdTx } from '../types/tx'
-import logger from './log';
 import { getOriginAddress } from './TxSignData'
 
 function registerCodec() {
@@ -25,8 +24,8 @@ export function signApproveTxMsg(oMsg: {
 }) {
   oMsg.tx.qos = accMul(oMsg.tx.qos, qosDecimal)
   const signed = makeTxSignMsg(oMsg)
-  logger.debug('Approve signedMsg: ')
-  logger.info(JSON.stringify(signed.arrMsg))
+  // logger.debug('Approve signedMsg: ')
+  // logger.info(JSON.stringify(signed.arrMsg))
   const signatureData = nacl.sign.detached(Buffer.from(signed.arrMsg), oMsg.account.keypair.secretKey)
 
   const codec = registerCodec()
@@ -41,9 +40,9 @@ export function signApproveTxMsg(oMsg: {
   const itx = new ApproveITX(approve)
   const stdtx = new StdTx(itx, [sig], oMsg.chainid, oMsg.maxGas.toString())
 
-  const jsonTx = codec.marshalJson(stdtx)
-  logger.debug('stdtx: ')
-  logger.info(jsonTx)
+  // const jsonTx = codec.marshalJson(stdtx)
+  // logger.debug('stdtx: ')
+  // logger.info(jsonTx)
   const binary = codec.marshalBinary(stdtx)
   // logger.debug(binary.toString())
 
@@ -79,7 +78,7 @@ function composeData(account: Account, tx: IApproveTx) {
   txMsgArray = txMsgArray.concat([...stringToBuffer(tx.qos.toString())])
   const qscArr: any[] = []
   const cqscAmountArr: string[] = []
-  logger.debug('Array.isArray(tx.qscs)', Array.isArray(tx.qscs), tx.qscs)
+  // logger.debug('Array.isArray(tx.qscs)', Array.isArray(tx.qscs), tx.qscs)
   if (Array.isArray(tx.qscs) && tx.qscs.length > 0) {
     for (const qsc of tx.qscs) {
       cqscAmountArr.push(`${qsc.amount}${qsc.coin_name.toLowerCase()}`)

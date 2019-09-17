@@ -5,7 +5,6 @@ import Account from '../Account'
 import { IDelegatorTx, IUnbondDelegatorTx, qosDecimal } from '../types/common'
 import { ITX } from '../types/delegator'
 import { PubKeyEd25519, Signature, StdTx } from '../types/tx'
-import logger from './log';
 import { getOriginAddress } from './TxSignData'
 
 function registerCodec() {
@@ -99,8 +98,8 @@ export function signUnbondDelegatorTxMsg(oMsg: {
 }) {
   oMsg.tx.qos = accMul(oMsg.tx.qos, qosDecimal)
   const signedMsg = makeUnbondTxSignMsg(oMsg)
-  logger.debug('UnbondDelegator signedMsg: ')
-  logger.info(JSON.stringify(signedMsg))
+  // logger.debug('UnbondDelegator signedMsg: ')
+  // logger.info(JSON.stringify(signedMsg))
   const signatureData = nacl.sign.detached(Buffer.from(signedMsg), oMsg.account.keypair.secretKey)
 
   const codec = registerUnbondCodec()
@@ -114,9 +113,9 @@ export function signUnbondDelegatorTxMsg(oMsg: {
   )
   const stdtx = new StdTx(itx, [sig], oMsg.chainid, oMsg.maxGas.toString())
 
-  const jsonTx = codec.marshalJson(stdtx)
-  logger.debug('UnbondDelegator stdtx: ')
-  logger.info(jsonTx)
+  // const jsonTx = codec.marshalJson(stdtx)
+  // logger.debug('UnbondDelegator stdtx: ')
+  // logger.info(jsonTx)
   const binary = codec.marshalBinary(stdtx)
   // logger.debug(binary.toString())
 
