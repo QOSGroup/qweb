@@ -2,6 +2,10 @@
 
 const path = require('path');
 
+function resolve(filepath) {
+    return path.resolve(__dirname, filepath)
+}
+
 module.exports = {
     resolve: {
         extensions: ['.js', '.ts', '.json'],
@@ -39,4 +43,7 @@ module.exports = {
         ],
     },
     plugins: [],
+    node: {
+        fs: 'empty'
+    }
 };

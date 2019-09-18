@@ -6,7 +6,6 @@ import { accMul, Int64ToBuffer, stringToBuffer } from '.'
 import Account from '../Account'
 import { IUserTx, qosDecimal } from '../types/common'
 import { MsgMultiSend, PubKeyEd25519, QSC, Receiver, Sender, Signature, StdTx } from '../types/tx'
-import logger from './log'
 
 export function getOriginAddress(address: string) {
   const addrDecode = bech32.decode(address)
@@ -37,7 +36,7 @@ export function signTxMsg(
   // logger.info(jsonTx)
   // logger.debug('marshalBinary: ')
   const binary = codec.marshalBinary(stdtx)
-  logger.debug(binary.toString())
+  // logger.debug(binary.toString())
 
   // const decodedDataTx = new StdTx();
   // codec.unMarshalBinary(binary, decodedDataTx)

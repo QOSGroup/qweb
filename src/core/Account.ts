@@ -3,7 +3,6 @@ import Qweb from './qweb'
 import { IApproveTx, IDelegatorTx, IKeyPair, IQSC, IUnbondDelegatorTx, IUserTx } from './types/common'
 import { signApproveTxMsg } from './utils/ApproveSignData';
 import { signDelegatorTxMsg, signUnbondDelegatorTxMsg } from './utils/DelegatorSignData';
-import logger from './utils/log';
 import { signTxMsg } from './utils/TxSignData'
 
 class Account {
@@ -62,7 +61,7 @@ class Account {
     const acc = await this.getAccount()
     const txBinary = await this.setUnbondDelegatorTx(tx, Number(acc.base_account.nonce) + 1, maxGas)
     const res = await this.qweb.rpc.broadcastTxSync({ tx: txBinary })
-    logger.debug(res)
+    // logger.debug(res)
     return res
   }
 
@@ -70,7 +69,7 @@ class Account {
     const acc = await this.getAccount()
     const txBinary = await this.setApproveTx(tx, Number(acc.base_account.nonce) + 1, maxGas)
     const res = await this.qweb.rpc.broadcastTxSync({ tx: txBinary })
-    logger.debug(res)
+    // logger.debug(res)
     return res
   }
 

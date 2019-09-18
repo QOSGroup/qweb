@@ -6,7 +6,8 @@
       "module": "umd"
     },
     "exclude": [
-      "node_modules/**"
+      "node_modules/**",
+      "src/core/utils/log.ts"
     ]
   }
   
