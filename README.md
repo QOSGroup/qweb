@@ -34,3 +34,41 @@ console.log(mnemonic)
 
   const account = qweb.newAccount(mnemonic)
 ```
+
+- 发送一对多交易
+```
+  const tx = await account.sendTx([{
+    to: 'address1eep59h9ez4thymept8nxl0padlrc6r78fsjmp3',
+    qos: 100,
+    qscs: [{
+      amount: 3,
+      coin_name: 'QSC'
+    }]
+  }])
+```
+
+- 发送委托交易
+```
+  await account.sendDelegatorTx({
+    to: 'address1nzv9awha9606jp5rpqe2kujckddpyauggu56ru',
+    qos: 100,
+    isCompound: false
+  })
+```
+
+- 发送解绑交易
+```
+  await account.sendUnbondDelegatorTx({
+    to: 'address1nzv9awha9606jp5rpqe2kujckddpyauggu56ru',
+    qos: 100,
+    isUnbondAll: false
+  })
+```
+
+- 发送预授权交易
+```
+  await account.sendApproveTx({
+    to: 'address1v26ael2jh0q7aetuk45yqf3jcyyywg2g6wq2tv',
+    qos: 100
+  })
+```
