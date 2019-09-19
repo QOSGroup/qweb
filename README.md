@@ -1,6 +1,11 @@
 # QWeb
 QOS JS SDK
 
+[![version](https://img.shields.io/github/tag/QOSGroup/qweb.svg)](https://github.com/QOSGroup/qweb/releases/latest)
+[![Build Status](https://travis-ci.org/QOSGroup/qweb.svg?branch=master)](https://travis-ci.org/QOSGroup/qweb)
+[![license](https://img.shields.io/github/license/QOSGroup/qweb.svg)](https://github.com/QOSGroup/qweb/blob/master/LICENSE)
+[![](https://tokei.rs/b1/github/QOSGroup/qweb?category=lines)](https://github.com/QOSGroup/qweb)
+
 # 开发
 - 安装依赖  
   $ yarn install
