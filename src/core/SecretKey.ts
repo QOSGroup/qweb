@@ -6,8 +6,8 @@ import { getHash256 } from './utils'
 export default class SecretKey {
 
   public generateMnemonic() {
-    // 商 256，生成24个助记单词
-    const mnemonic = generateMnemonic(256)
+    // 商 256，生成24个助记单词, 商 128，生成12个助记单词
+    const mnemonic = generateMnemonic(128)
     return mnemonic
   }
 

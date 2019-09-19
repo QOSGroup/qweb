@@ -8,18 +8,18 @@ test('init Qweb', async t => {
 
   t.log(qweb)
 
-  // const mnemonic = qweb.key.generateMnemonic()
+  const mnemonic = qweb.key.generateMnemonic()
 
-  // logger.info('mnemonic: ', mnemonic)
+  logger.info('mnemonic: ', mnemonic)
 
-  const mnemonic = 'genius cable sea obey goddess glow wood tree have example fee grow enough release garden access antique general sail either palace nothing remember shop'
+  // const mnemonic = 'genius cable sea obey goddess glow wood tree have example fee grow enough release garden access antique general sail either palace nothing remember shop'
 
-  t.is(mnemonic.split(' ').length, 24)
+  t.is(mnemonic.split(' ').length, 12)
 
-  const account = qweb.newAccount(mnemonic)
+  // const account = qweb.newAccount(mnemonic)
 
-  logger.log('account.address: ', account.address)
-  logger.log('account.privateKey: ', account.privateKey)
+  // logger.log('account.address: ', account.address)
+  // logger.log('account.privateKey: ', account.privateKey)
 
   // delegator test
   // await account.sendDelegatorTx({
@@ -34,11 +34,11 @@ test('init Qweb', async t => {
   //   isUnbondAll: false
   // })
 
-  await account.sendApproveTx({
-    to: 'address1v26ael2jh0q7aetuk45yqf3jcyyywg2g6wq2tv',
-    qos: 100,
-    // qscs: false
-  })
+  // await account.sendApproveTx({
+  //   to: 'address1v26ael2jh0q7aetuk45yqf3jcyyywg2g6wq2tv',
+  //   qos: 100,
+  //   // qscs: false
+  // })
 
 
   // transfer test
