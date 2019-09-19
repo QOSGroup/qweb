@@ -1,11 +1,11 @@
 {
   "compilerOptions": {
-    "target": "es2015",
+    "target": "esnext",
     "outDir": "build/main",
     "rootDir": "src",
     "moduleResolution": "node",
     "module": "commonjs",
-    // "declaration": true,
+    "declaration": true,
     "inlineSourceMap": true,
     "esModuleInterop": true /* Enables emit interoperability between CommonJS and ES Modules via creation of namespace objects for all imports. Implies 'allowSyntheticDefaultImports'. */,
 
@@ -32,13 +32,13 @@
     "pretty": true /* Stylize errors and messages using color and context. */,
 
     /* Experimental Options */
-    // "experimentalDecorators": true /* Enables experimental support for ES7 decorators. */,
+    "experimentalDecorators": true /* Enables experimental support for ES7 decorators. */,
     // "emitDecoratorMetadata": true /* Enables experimental support for emitting type metadata for decorators. */,
 
     "lib": ["es2017", "dom"],
     "types": ["node"],
-    "typeRoots": ["node_modules/@types", "src/types"],
-    "allowJs": true
+    "typeRoots": ["node_modules/@types", "src/types"]
+    // "allowJs": true
   },
   "include": ["src/**/*.ts", "src/**/*.js"],
   "exclude": ["node_modules/**"],

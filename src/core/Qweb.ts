@@ -15,7 +15,7 @@ class Qweb {
   public node: any;
   public qmoonUrl: string;
 
-  constructor(config: {
+  public constructor(config: {
     readonly chainId: string,
     readonly baseUrl: string
   }) {

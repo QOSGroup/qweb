@@ -1,6 +1,15 @@
-# qweb
-qos js sdk
+# QWeb
+QOS JS SDK
 
-# Install
+# 开发
+- 安装依赖  
+  $ yarn install
 
+- 开发  
+  $ npm run watch
+
+- 打包  
+  $ npm run build
+
+# 用法
 

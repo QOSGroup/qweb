@@ -17,6 +17,7 @@ const createAxioRequest = (baseUrl: string) => {
 
   // request拦截器
   request.interceptors.request.use((config) => {
+    config.headers['Access-Control-Allow-Headers'] = 'Content-Type, QToken';
     return config;
   }, (error) => {
     // Do something with request error
