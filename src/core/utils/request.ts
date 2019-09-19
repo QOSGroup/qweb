@@ -12,12 +12,10 @@ const createAxioRequest = (baseUrl: string) => {
   const request = axios.create({
     baseURL: baseUrl, // api的base_url
     timeout: 200000, // 请求超时时间
-    withCredentials: true
   });
 
   // request拦截器
   request.interceptors.request.use((config) => {
-    config.headers['Access-Control-Allow-Headers'] = 'Content-Type, QToken';
     return config;
   }, (error) => {
     // Do something with request error
