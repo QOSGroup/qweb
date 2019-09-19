@@ -24,8 +24,8 @@ QOS JS SDK
 
 - 生成助记符
 ```
-const mnemonic = qweb.key.generateMnemonic()
-console.log(mnemonic)
+  const mnemonic = qweb.key.generateMnemonic()
+  console.log(mnemonic)
 ```
 
 - 新建账号
