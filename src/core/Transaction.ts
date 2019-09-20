@@ -1,4 +1,4 @@
-import Qweb from './qweb';
+import Qweb from './Qweb';
 
 class Transaction {
   public readonly qweb: Qweb;

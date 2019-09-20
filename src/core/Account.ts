@@ -1,5 +1,5 @@
 import { encodeBase64 } from 'tweetnacl-util'
-import Qweb from './qweb'
+import Qweb from './Qweb'
 import { IApproveTx, IDelegatorTx, IKeyPair, IQSC, IUnbondDelegatorTx, IUserTx } from './types/common'
 import { signApproveTxMsg } from './utils/ApproveSignData';
 import { signDelegatorTxMsg, signUnbondDelegatorTxMsg } from './utils/DelegatorSignData';
