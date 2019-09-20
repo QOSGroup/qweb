@@ -1,11 +1,9 @@
-
-export const qosDecimal = 10000
+export const qosDecimal = 10000;
 
 export interface IQSC {
-  coin_name: string,
-  amount: number
+  coin_name: string;
+  amount: number;
 }
-
 
 /**
  * 用户交易
@@ -14,15 +12,15 @@ export interface IUserTx {
   /**
    * 接收方地址
    */
-  to: string,
+  to: string;
   /**
    * QOS 数量
    */
-  qos: number,
+  qos: number;
   /**
    * QSC对象数组
    */
-  qscs?: IQSC[]
+  qscs?: IQSC[];
 }
 
 export interface IKeyPair {
@@ -37,43 +35,43 @@ export interface IDelegatorTx {
   /**
    * ValidatorOwner: Validator 地址
    */
-  to: string,
+  to: string;
   /**
    * QOS 数量
    */
-  qos: number,
+  qos: number;
   /**
    * 是否复投
    */
-  isCompound: boolean
+  isCompound: boolean;
 }
 
 export interface IUnbondDelegatorTx {
   /**
    * ValidatorOwner: Validator 地址
    */
-  to: string,
+  to: string;
   /**
    * QOS 数量
    */
-  qos: number,
+  qos: number;
   /**
    * 是否解绑所以
    */
-  isUnbondAll: boolean
+  isUnbondAll: boolean;
 }
 
 export interface IApproveTx {
   /**
    * 被预授权人地址
    */
-  to: string,
+  to: string;
   /**
    * QOS 数量
    */
-  qos: number,
+  qos: number;
   /**
    * QSC对象数组
    */
-  qscs?: IQSC[]
+  qscs?: IQSC[];
 }

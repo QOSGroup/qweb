@@ -54,7 +54,6 @@
     ],
     "semicolon": [false, "never"],
     "no-unused-expression": false,
-    "no-unused-variable": [true, {"ignore-pattern": "^_"}],
     "variable-name": {
       "options": [
         "ban-keywords",

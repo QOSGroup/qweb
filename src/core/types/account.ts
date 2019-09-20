@@ -1,4 +1,4 @@
-import { TypeFactory, Types } from 'js-amino'
+import { TypeFactory, Types } from 'js-amino';
 
 export const QOSAccount = TypeFactory.create('QOSAccount', [
   {
@@ -13,20 +13,19 @@ export const QOSAccount = TypeFactory.create('QOSAccount', [
     name: 'qscs',
     type: Types.ArrayStruct
   }
-])
-
+]);
 
 export const BaseAccount = TypeFactory.create('base_account', [
-	{
-		name: 'account_address',
-		type: Types.String
-	},
   {
-		name: 'public_key',
-		type: Types.Interface
-	},
+    name: 'account_address',
+    type: Types.String
+  },
+  {
+    name: 'public_key',
+    type: Types.Interface
+  },
   {
     name: 'nonce',
     type: Types.Int64
   }
-])
+]);

@@ -1,11 +1,11 @@
-import { TypeFactory, Types } from 'js-amino'
+import { TypeFactory, Types } from 'js-amino';
 
 export const ApproveITX = TypeFactory.create('ApproveITX', [
   {
     name: 'Approve',
     type: Types.Struct
   }
-])
+]);
 
 export const Approve = TypeFactory.create('Approve', [
   {
@@ -24,4 +24,4 @@ export const Approve = TypeFactory.create('Approve', [
     name: 'qscs',
     type: Types.ArrayStruct
   }
-])
+]);

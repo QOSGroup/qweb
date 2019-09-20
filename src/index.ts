@@ -1,2 +1,2 @@
-import Qweb from './core/Qweb'
-export default Qweb
+import Qweb from './core/Qweb';
+export default Qweb;

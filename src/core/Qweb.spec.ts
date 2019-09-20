@@ -1,20 +1,23 @@
-import test from 'ava'
+import test from 'ava';
 // import { marshalTx } from '../lib/web.js'
-import Qweb from './Qweb'
-import logger from './utils/log'
+import Qweb from './Qweb';
+import logger from './utils/log';
 
 test('init Qweb', async t => {
-  const qweb = new Qweb({ chainId: 'aquarius-1001', baseUrl: 'ws://47.103.78.91:26657' })
+  const qweb = new Qweb({
+    chainId: 'aquarius-1001',
+    baseUrl: 'ws://47.103.78.91:26657'
+  });
 
-  t.log(qweb)
+  t.log(qweb);
 
-  const mnemonic = qweb.key.generateMnemonic()
+  const mnemonic = qweb.key.generateMnemonic();
 
-  logger.info('mnemonic: ', mnemonic)
+  logger.info('mnemonic: ', mnemonic);
 
   // const mnemonic = 'genius cable sea obey goddess glow wood tree have example fee grow enough release garden access antique general sail either palace nothing remember shop'
 
-  t.is(mnemonic.split(' ').length, 12)
+  t.is(mnemonic.split(' ').length, 12);
 
   // const account = qweb.newAccount(mnemonic)
 
@@ -40,7 +43,6 @@ test('init Qweb', async t => {
   //   // qscs: false
   // })
 
-
   // transfer test
   // const tx =
   // await account.sendTx([{
@@ -58,8 +60,7 @@ test('init Qweb', async t => {
 
   // logger.info(JSON.stringify(tx))
 
-
-  t.is(qweb.config.chainId, 'aquarius-1001')
+  t.is(qweb.config.chainId, 'aquarius-1001');
 
   // const marshaled = marshalTx(tx)
 
@@ -92,8 +93,5 @@ test('init Qweb', async t => {
   // logger.info(msg.join(' '))
   // logger.debug(signatureBase64)
 
-  t.pass()
-})
-
-
-
+  t.pass();
+});
