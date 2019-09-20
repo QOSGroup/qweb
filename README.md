@@ -77,3 +77,13 @@ QOS JS SDK
     qos: 100
   })
 ```
+
+- 以上所有交易方法第二个参数是gas费用，可自行设定正整数。  
+如： 
+```
+  await account.sendDelegatorTx({
+    to: 'address1nzv9awha9606jp5rpqe2kujckddpyauggu56ru',
+    qos: 100,
+    isCompound: false
+  }, 30000)
+```
