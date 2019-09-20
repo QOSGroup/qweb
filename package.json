@@ -36,7 +36,7 @@
     "preinstall": "node -e \"if(process.env.npm_execpath.indexOf('yarn') === -1) throw new Error('qweb must be installed with Yarn: https://yarnpkg.com/')\""
   },
   "pre-commit": [
-    "fix"
+    "test:lint"
   ],
   "scripts-info": {
     "info": "Display information about the package scripts",
